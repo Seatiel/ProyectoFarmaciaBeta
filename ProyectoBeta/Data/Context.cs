@@ -16,7 +16,7 @@ namespace ProyectoBeta.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source=DESKTOP-34DIMD7\\SEATIEL;Initial Catalog=FarmaciaDb;Integrated Security=True;Connect Timeout=15;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+            optionsBuilder.UseSqlServer("Data Source=clientesserverdb.database.windows.net;Initial Catalog=FarmaciaDb;Integrated Security=False;User ID=matap91;Password=theworlds.91;Connect Timeout=15;Encrypt=True;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
         }
 
         public DbSet<ProyectoBeta.Models.Laboratorios> Laboratorios { get; set; }

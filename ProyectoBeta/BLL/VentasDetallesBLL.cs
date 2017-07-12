@@ -25,7 +25,7 @@ namespace ProyectoBeta.Models
                 catch (Exception)
                 {
 
-                    throw;
+                        throw;
                 }
             }
             return resultado;
