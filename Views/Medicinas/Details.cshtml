@@ -1,0 +1,72 @@
+@model ProyectoBeta.Models.Medicinas
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Medicinas</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Nombre)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Descripcion)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Descripcion)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PrecioVenta)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PrecioVenta)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PrecioCompra)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PrecioCompra)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.FechaVencimiento)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.FechaVencimiento)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.CantidadExistencia)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CantidadExistencia)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.LaboratorioId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.LaboratorioId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Especificaciones)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Especificaciones)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.CategoriaId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CategoriaId)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.MedicinaId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
