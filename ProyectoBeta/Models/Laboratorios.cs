@@ -10,9 +10,9 @@ namespace ProyectoBeta.Models
     {
         [Key]
         public int LaboratorioId { get; set; }
-
+        [Required]
         public string Nombre { get; set; }
-
+        [Required]
         public DateTime FechaIngreso { get; set; }
 
         public Laboratorios()

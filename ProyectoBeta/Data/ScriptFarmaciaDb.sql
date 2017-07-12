@@ -50,3 +50,9 @@ Cantidad int,
 FechaVenta date,
 Total money
 );
+
+insert into TipoVentas(Descripcion) values ('Contado')
+insert into TipoVentas(Descripcion) values ('Credito')
+
+select * from Ventas
+
