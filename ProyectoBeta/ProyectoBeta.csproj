@@ -7,6 +7,24 @@
   <PropertyGroup>
     <PackageTargetFallback>$(PackageTargetFallback);portable-net45+win8+wp8+wpa81;</PackageTargetFallback>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="wwwroot\fonts\fontawesome-webfont.eot" />
+    <Content Include="wwwroot\fonts\fontawesome-webfont.svg" />
+    <Content Include="wwwroot\fonts\fontawesome-webfont.ttf" />
+    <Content Include="wwwroot\fonts\fontawesome-webfont.woff" />
+    <Content Include="wwwroot\fonts\fontawesome-webfont.woff2" />
+    <Content Include="wwwroot\fonts\FontAwesome.otf" />
+    <Content Include="wwwroot\fonts\fontello.eot" />
+    <Content Include="wwwroot\fonts\fontello.svg" />
+    <Content Include="wwwroot\fonts\fontello.ttf" />
+    <Content Include="wwwroot\fonts\fontello.woff" />
+    <Content Include="wwwroot\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="wwwroot\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="wwwroot\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="wwwroot\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="wwwroot\fonts\glyphicons-halflings-regular.woff2" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="bootstrap" Version="3.3.7" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
@@ -23,6 +41,90 @@
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="wwwroot\js\about.html" />
+    <None Include="wwwroot\js\appointment.html" />
+    <None Include="wwwroot\js\contact.html" />
+    <None Include="wwwroot\css\bootstrap.css" />
+    <None Include="wwwroot\css\flexslider.css" />
+    <None Include="wwwroot\css\font-awesome.css" />
+    <None Include="wwwroot\css\JiSlider.css" />
+    <None Include="wwwroot\css\jquery-ui.css" />
+    <None Include="wwwroot\css\services.css" />
+    <None Include="wwwroot\css\style.css" />
+    <None Include="wwwroot\css\swipebox.css" />
+    <None Include="wwwroot\css\team.css" />
+    <None Include="wwwroot\css\wickedpicker.css" />
+    <None Include="wwwroot\css\ziehharmonika.css" />
+    <None Include="wwwroot\fonts\fontawesome-webfont.eot" />
+    <None Include="wwwroot\fonts\fontawesome-webfont.svg" />
+    <None Include="wwwroot\fonts\fontawesome-webfont.ttf" />
+    <None Include="wwwroot\fonts\fontawesome-webfont.woff" />
+    <None Include="wwwroot\fonts\fontawesome-webfont.woff2" />
+    <None Include="wwwroot\fonts\FontAwesome.otf" />
+    <None Include="wwwroot\fonts\fontello.eot" />
+    <None Include="wwwroot\fonts\fontello.svg" />
+    <None Include="wwwroot\fonts\fontello.ttf" />
+    <None Include="wwwroot\fonts\fontello.woff" />
+    <None Include="wwwroot\fonts\glyphicons-halflings-regular.eot" />
+    <None Include="wwwroot\fonts\glyphicons-halflings-regular.svg" />
+    <None Include="wwwroot\fonts\glyphicons-halflings-regular.ttf" />
+    <None Include="wwwroot\fonts\glyphicons-halflings-regular.woff" />
+    <None Include="wwwroot\fonts\glyphicons-halflings-regular.woff2" />
+    <None Include="wwwroot\js\gallery.html" />
+    <None Include="wwwroot\js\icons.html" />
+    <None Include="wwwroot\images\about.jpg" />
+    <None Include="wwwroot\images\ad.jpg" />
+    <None Include="wwwroot\images\ad1.jpg" />
+    <None Include="wwwroot\images\arrow.png" />
+    <None Include="wwwroot\images\banner.jpg" />
+    <None Include="wwwroot\images\banner1.jpg" />
+    <None Include="wwwroot\images\banner2.jpg" />
+    <None Include="wwwroot\images\banner3.jpg" />
+    <None Include="wwwroot\images\c-arrows.png" />
+    <None Include="wwwroot\images\g1.jpg" />
+    <None Include="wwwroot\images\g2.jpg" />
+    <None Include="wwwroot\images\g3.jpg" />
+    <None Include="wwwroot\images\g4.jpg" />
+    <None Include="wwwroot\images\g5.jpg" />
+    <None Include="wwwroot\images\g6.jpg" />
+    <None Include="wwwroot\images\g7.jpg" />
+    <None Include="wwwroot\images\g9.jpg" />
+    <None Include="wwwroot\images\icons.svg" />
+    <None Include="wwwroot\images\left.png" />
+    <None Include="wwwroot\images\left1.png" />
+    <None Include="wwwroot\images\right.png" />
+    <None Include="wwwroot\images\right1.png" />
+    <None Include="wwwroot\images\search.png" />
+    <None Include="wwwroot\images\slid1.jpg" />
+    <None Include="wwwroot\images\slid2.jpg" />
+    <None Include="wwwroot\images\slid3.jpg" />
+    <None Include="wwwroot\images\t1.jpg" />
+    <None Include="wwwroot\images\t2.jpg" />
+    <None Include="wwwroot\images\t3.jpg" />
+    <None Include="wwwroot\images\t4.jpg" />
+    <None Include="wwwroot\js\index.html" />
+    <None Include="wwwroot\Inicio\js\bootstrap.js" />
+    <None Include="wwwroot\Inicio\js\cbpFWTabs.js" />
+    <None Include="wwwroot\Inicio\js\easing.js" />
+    <None Include="wwwroot\Inicio\js\jarallax.js" />
+    <None Include="wwwroot\Inicio\js\JiSlider.js" />
+    <None Include="wwwroot\Inicio\js\jquery-2.2.3.min.js" />
+    <None Include="wwwroot\Inicio\js\jquery-ui.js" />
+    <None Include="wwwroot\Inicio\js\jquery.countup.js" />
+    <None Include="wwwroot\Inicio\js\jquery.flexslider.js" />
+    <None Include="wwwroot\Inicio\js\jquery.swipebox.min.js" />
+    <None Include="wwwroot\Inicio\js\jquery.waypoints.min.js" />
+    <None Include="wwwroot\Inicio\js\modernizr-2.6.2.min.js" />
+    <None Include="wwwroot\Inicio\js\move-top.js" />
+    <None Include="wwwroot\Inicio\js\numscroller-1.0.js" />
+    <None Include="wwwroot\Inicio\js\SmoothScroll.min.js" />
+    <None Include="wwwroot\Inicio\js\wickedpicker.js" />
+    <None Include="wwwroot\Inicio\js\ziehharmonika.js" />
+    <None Include="wwwroot\js\single.html" />
+    <None Include="wwwroot\js\typography.html" />
+    <None Include="wwwroot\js\w3layouts-License.txt" />
   </ItemGroup>
 
 </Project>
