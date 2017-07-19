@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ProyectoBeta.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProyectoBeta.Controllers
 {
+    [Authorize(ActiveAuthenticationSchemes = "CookiePolicy")]
     public class CategoriasController : Controller
     {
         private readonly Context _context;

@@ -1,9 +1,11 @@
 ﻿Create table Usuarios (
 UsuarioId int identity(1,1) primary key,
-Nombres varchar(80),
-NombreUsuario varchar(80),
-Clave Varchar(15),
-TipoUsuario int
+Nombre varchar(80),
+Apellido varchar(80),
+Email varchar(50),
+NombreUsuario varchar(30),
+Clave Varchar(20),
+ConfirmarClave varchar(20),
 );
 
 Create table Categorias(

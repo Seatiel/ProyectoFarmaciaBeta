@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using ProyectoBeta.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace ProyectoBeta
 {
@@ -30,10 +31,22 @@ namespace ProyectoBeta
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.AddMvc();
+           
 
             services.AddDbContext<Context>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("Context")));
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("CookiePolicy", policy =>
+                {
+                    policy.AddAuthenticationSchemes("CookiePolicy", "CookiePolicy");
+                    policy.RequireAuthenticatedUser();
+                });
+            });
+
+            services.AddDistributedMemoryCache();
+            services.AddSession();
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,7 +65,17 @@ namespace ProyectoBeta
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            app.UseCookieAuthentication(new CookieAuthenticationOptions()
+            {
+                AuthenticationScheme = "CookiePolicy",
+                LoginPath = new PathString("/Usuarios/Login/"),
+                AccessDeniedPath = new PathString("/Account/AccessDenied/"),
+                AutomaticAuthenticate = false, // this will be handled by the authorisation policy
+                AutomaticChallenge = false // this will be handled by the authorisation policy
+            });
+
             app.UseStaticFiles();
+            app.UseSession();
 
             app.UseMvc(routes =>
             {

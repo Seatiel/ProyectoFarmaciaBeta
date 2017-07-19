@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ProyectoBeta.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProyectoBeta.Controllers
 {
+    [Authorize(ActiveAuthenticationSchemes = "CookiePolicy")]
     public class MedicinasController : Controller
     {
         private readonly Context _context;
@@ -23,10 +25,18 @@ namespace ProyectoBeta.Controllers
 
             var medicinas = from m in _context.Medicinas
                             select m;
+            var categoria = from c in _context.Categorias
+                            select c;
+
+
             if (!String.IsNullOrEmpty(searchString))
             {
                 medicinas = medicinas.Where(s => s.Nombre.Contains(searchString));
+                
             }
+
+
+
 
 
             return View(await medicinas.ToListAsync());
