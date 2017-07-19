@@ -11,11 +11,20 @@ namespace ProyectoBeta.Models
         public static List<Categorias> GetLista()
         {
             var lista = new List<Categorias>();
-            var db = new Context();
+            using (var db = new Context())
+            {
+                try
+                {
+                    lista = db.Categorias.ToList();
+                }
+                catch (Exception)
+                {
 
-            lista = db.Categorias.ToList();
+                    throw;
+                }
+                return lista;
+            }
 
-            return lista;
         }
     }
 }
