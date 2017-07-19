@@ -10,23 +10,38 @@ namespace ProyectoBeta.Models
     {
         [Key]
         public int MedicinaId { get; set; }
-        [Required]
+
+        [StringLength(80, ErrorMessage ="El limite de este campo es de 80 caracteres")]
+        [Required(ErrorMessage = "Este campo es obligatorio")]
         public string Nombre { get; set; }
-        [Required]
+
+        [StringLength(80, ErrorMessage = "El limite de este campo es de 80 caracteres")]
+        [Required(ErrorMessage = "Este campo es obligatorio")]
         public string Descripcion { get; set; }
-        [Required]
+
+        [DataType(DataType.Currency)]
+        [Required(ErrorMessage = "Este campo es obligatorio")]
         public decimal PrecioVenta { get; set; }
-        [Required]
+
+        [DataType(DataType.Currency)]
+        [Required(ErrorMessage = "Este campo es obligatorio")]
         public decimal PrecioCompra { get; set; }
-        [Required]
+
+        [Display(Name = "Fecha de vencimiento")]
+        [DataType(DataType.Date)]
         public DateTime FechaVencimiento { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = "Este campo es obligatorio")]
         public int CantidadExistencia { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = "Este campo es obligatorio")]
         public int LaboratorioId { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = "Este campo es obligatorio")]
+        [StringLength(80, ErrorMessage = "El limite de este campo es de 80 caracteres")]
         public string Especificaciones { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = "Este campo es obligatorio")]
         public int CategoriaId { get; set; }
 
         public Medicinas()

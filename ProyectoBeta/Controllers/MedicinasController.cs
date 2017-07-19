@@ -18,6 +18,27 @@ namespace ProyectoBeta.Controllers
             _context = context;    
         }
 
+        public async Task<IActionResult> Index(string searchString)
+        {
+
+            var medicinas = from m in _context.Medicinas
+                            select m;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                medicinas = medicinas.Where(s => s.Nombre.Contains(searchString));
+            }
+
+
+            return View(await medicinas.ToListAsync());
+
+        }
+
+        //[HttpPost]
+        //public string Index(string searchString, bool notUsed)
+        //{
+        //    return "From [HttpPost]Index: filter on " + searchString;
+        //}
+
         [HttpGet]
         public JsonResult Lista(int id)
         {
@@ -45,10 +66,10 @@ namespace ProyectoBeta.Controllers
         }
 
         // GET: Medicinas
-        public async Task<IActionResult> Index()
-        {
-            return View(await _context.Medicinas.ToListAsync());
-        }
+        //public async Task<IActionResult> Index()
+        //{
+        //    return View(await _context.Medicinas.ToListAsync());
+        //}
 
         // GET: Medicinas/Details/5
         public async Task<IActionResult> Details(int? id)
