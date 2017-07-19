@@ -21,9 +21,20 @@ namespace ProyectoBeta.Controllers
         }
 
         // GET: Usuarios
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
+
+            var usuarios = from u in _db.Usuarios
+                            select u;
+
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                usuarios = usuarios.Where(s => s.NombreUsuario.Contains(searchString));
+
+            }
             return View(await _db.Usuarios.ToListAsync());
+
         }
 
         // GET: Usuarios/Details/5

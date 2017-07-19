@@ -29,9 +29,22 @@ namespace ProyectoBeta.Controllers
         }
 
         // GET: Laboratorios
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-            return View(await _context.Laboratorios.ToListAsync());
+
+            var laboratorios = from l in _context.Laboratorios
+                            select l;
+
+
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                laboratorios = laboratorios.Where(s => s.Nombre.Contains(searchString));
+
+            }
+
+            return View(await laboratorios.ToListAsync());
+
         }
 
         // GET: Laboratorios/Details/5

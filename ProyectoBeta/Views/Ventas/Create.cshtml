@@ -1,224 +1,236 @@
 @model ProyectoBeta.Models.Ventas
-@{
-    ViewBag.Title = "Create";
-}
-<h2>Create</h2>
-
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-
-    <div class="form-horizontal">
-        <h4>Ventas</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group col-lg-12">
-            <div class=" input-group">
-                <input class="form-control input-group-sm col-2" type="text" id="dpFecha" placeholder="Fecha" />
-                <select class="form-control selected" id="ComboBox"></select>
-            </div>
-        </div>
-        <div class="form-group" size="100">
-            <label>Ventas</label>
-            <div class="input-group">
-                <select class="form-control selected" id="ComboBoxM" onchange="Seleccionar()"></select>
-                <input class="form-control input-group-sm col-2" type="text" id="tbPrecio" readonly placeholder="Precio" />
-                <input class="form-control input-group-sm col-2" type="text" id="tbCantidad" placeholder="Cantidad" />
-                <button type="button" class="btn btn-default" id="btnAgregar" onclick="AgregarDetalle()">Agregar</button>
-            </div>
-        </div>
-        <div class="table-responsive">
-            <table class="table table-hover table-sm table-bordered" id="tDetalle">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Medicina</th>
-                        <th>Precio</th>
-                        <th>Cantidad</th>
-                        <th>Sub-Total</th>
-                    </tr>
-                </thead>
-                <tbody id="tbBody"></tbody>
-            </table>
-        </div>
-        <div class="form-group">
-            <div class="input-group">
-                <span class="input-group-addon">Total:</span>
-                <input class="form-control input-group-lg col-2" type="text" id="tbTotal" value="0" readonly />
-            </div>
-        </div>
-        <div class="form-group text-center col-xl-12">
-            <div class="col-md-offset-2 col-md-10">
-                <button type="button" class="btn btn-default col-sm-2" id="btnCrear" onclick="CrearVentas()">Crear</button>
-            </div>
-        </div>
-    </div>
-}
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");
-
-        <script type="text/javascript">
-            $(document).ready(function () {
-                CargarMedicinas();
-                LlenarTipoVenta();
-            })
-
-            function CrearDetalle(Id) {
-
-                $('#tbBody tr').each(function () {
-                    var detalles = new Array();
-                    var ventaId = Id;
-                    var medicina = $(this).find('td').eq(1).html();
-                    var precio = $(this).find('td').eq(2).html();
-                    var cantidad = $(this).find('td').eq(3).html();
-                    var subTotal = $(this).find('td').eq(4).html();
-                    var total = $("#tbTotal").val();
-
-                    detalles.push(
-                        {
-                            Id: 0,
-                            VentaId: ventaId,
-                            MedicinaId: medicina,
-                            Precio: precio,
-                            Total: total,
-                            Cantidad: cantidad
-                        });
-
-                    //alert(detalles);
-                    SentDetails(detalles);
-                });
-
-            }
-
-            function AgregarDetalle() {
-
-                var long = $("#tbBody tr").length;
-
-                var monto = $('#tbTotal').val();
-                var a = $('#ComboBoxM').find('option:selected');
-                var b = a.text();
-                var precio = $("#tbPrecio").val();
-                var cant = $("#tbCantidad").val();
-                var subTotal = precio * cant;
-
-                var fila = "<tr>";
-                fila += "<td>" + (long + 1) + "</td>";
-                fila += "<td>" + b + "</td>";
-                fila += "<td>" + precio + "</td>";
-                fila += "<td>" + cant + "</td>";
-                fila += "<td>" + subTotal + "</td>";
-                fila += "</tr>";
-
-                monto = parseFloat(subTotal) + parseFloat(monto);
-
-                $('#tDetalle tbody').append(fila);
-
-                $('#tbTotal').val(monto);
-            }
-
-            function SentDetails(detail) {
-                var pack = JSON.stringify(detail);
-                $.ajax(
-                    {
-                        type: "POST",
-                        url: "/VentasDetalles/Save",
-                        data: pack,
-                        contentType: "application/json",
-                        success: function (data) {
-                            if (!data) {
-                                alert("No puedo guardar el detalle");
-                            }
-                            else {
-                                alert("Se Guardo");
-                            }
-                        }
-                    });
-            }
-
-            function EnviarVentas(venta) {
-                alert(venta.VentaId);
-                $.ajax(
-                    {
-                        method: "POST",
-                        url: "/Ventas/Save",
-                        data: venta,
-                        success: function (id) {
-                            if (parseInt(id) > 0) {
-                                CrearDetalle(id);
-                            }
-                            else {
-                                alert("");
-                            }
-                        }
-                    });
-            };
-
-            function CrearVentas() {
-                var a = $('#ComboBox').find('option:selected').attr('id');
-
-                var c = $('#ComboBoxM').find('option:selected');
-                var d = c.text();
-
-                var cant = $('#tbCantidad').val();
-                var total = $('#tbTotal').val();
-                var prec = $('#tbPrecio').val();
-                var fec = $('#dpFecha').val();
-                var subtotal = $('#tbSubTotal').val();
-
-                var ventas = {
-                    VentaId: 0,
-                    Cantidad: cant,
-                    Total: total,
-                    SubTotal: subtotal,
-                    FechaVenta: fec,
-                    Precio: prec,
-                    Medicina: d,
-                    TipoVentaId: a
-                }
-                //alert(ventas.VentaId);
-                EnviarVentas(ventas);
-            }
-
-            function Seleccionar() {
-                var precio = $('#ComboBoxM').find('option:selected').attr('value');
-
-                $('#tbPrecio').val(precio);
-            }
-
-            function CargarMedicinas() {
-                $.getJSON("/Medicinas/Lista",
-                    {
-                        id: 1
-                    },
-                    function (lista) {
-                        $.each(lista, function (index, lista) {
-                            var Id = lista.medicinaId;
-                            var cli = lista.nombre;
-                            var ser = lista.precioVenta;
-                            var option = "<option id='" + Id + "'value ='" + ser + "'>" + cli + "</option>";
-                            $('#ComboBoxM').append(option);
-                        });
-                    });
-            }
-
-            function LlenarTipoVenta() {
-                $.getJSON("/Ventas/Lista",
-                    {
-                        id: 1
-                    },
-                    function (lista) {
-                        $.each(lista, function (index, lista) {
-                            var Id = lista.tipoVentaId;
-                            var ser = 0;
-                            var cli = lista.descripcion;
-                            var option = "<option id='" + Id + "'value='" + ser + "'>" + cli + "</option>";
-                            $('#ComboBox').append(option);
-                        });
-                    });
-            }
-        </script>
+    @{
+        ViewBag.Title = "Create";
     }
-}
+    <h2>Create</h2>
+
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-horizontal">
+            <h4>Ventas</h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group col-lg-12">
+                <div class=" input-group">
+                    
+                    <input class="form-control input-group-sm col-2" type="date" id="dpFecha" />
+                    <select class="form-control selected" id="ComboBox"> <option selected="selected" disabled="disabled">Tipo de venta</option></select>
+                </div>
+            </div>
+            <div class="form-group" size="100">
+                <label>Ventas</label>
+                <div class="input-group">
+                    <select class="form-control selected" id="ComboBoxM" onchange="Seleccionar()"> <option selected="selected" disabled="disabled">Medicinas</option></select>
+
+                    <input class="form-control input-group-sm col-2" type="text" id="tbPrecio" readonly placeholder="Precio" />
+                    <input class="form-control input-group-sm col-2" type="text" id="tbCantidad" placeholder="Cantidad" />
+                    <button type="button" class="btn btn-default" id="btnAgregar" onclick="AgregarDetalle()">Agregar</button>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover table-sm table-bordered" id="tDetalle">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Medicina</th>
+                            <th>Precio</th>
+                            <th>Cantidad</th>
+                            <th>Sub-Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbBody"></tbody>
+                </table>
+            </div>
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon">Total:</span>
+                    <input class="form-control input-group-lg col-2" type="text" id="tbTotal" value="0" readonly />
+                </div>
+            </div>
+            <div class="form-group text-center col-xl-12">
+                <div class="col-md-offset-2 col-md-10">
+                    <button type="button" class="btn btn-default col-sm-2" id="btnCrear" onclick="CrearVentas()">Crear</button>
+                </div>
+            </div>
+        </div>
+    }
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
+    <script>
+        function myFunction() {
+            document.getElementById('dpFecha').placeholder = Date();
+        }
+    </script>
+
+
+
+        @section Scripts {
+            @{await Html.RenderPartialAsync("_ValidationScriptsPartial");
+
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        CargarMedicinas();
+                        LlenarTipoVenta();
+                    })
+
+                    function CrearDetalle(Id) {
+
+                        $('#tbBody tr').each(function () {
+                            var detalles = new Array();
+                            var ventaId = Id;
+                            var medicina = $(this).find('td').eq(1).html();
+                            var precio = $(this).find('td').eq(2).html();
+                            var cantidad = $(this).find('td').eq(3).html();
+                            var subTotal = $(this).find('td').eq(4).html();
+                            var total = $("#tbTotal").val();
+
+                            detalles.push(
+                                {
+                                    Id: 0,
+                                    VentaId: ventaId,
+                                    MedicinaId: medicina,
+                                    Precio: precio,
+                                    Total: total,
+                                    Cantidad: cantidad
+                                });
+
+                            //alert(detalles);
+                            SentDetails(detalles);
+                        });
+
+                    }
+
+                    function AgregarDetalle() {
+
+                        var long = $("#tbBody tr").length;
+
+                        var monto = $('#tbTotal').val();
+                        var a = $('#ComboBoxM').find('option:selected');
+                        var b = a.text();
+                        var precio = $("#tbPrecio").val();
+                        var cant = $("#tbCantidad").val();
+                        var subTotal = precio * cant;
+
+                        var fila = "<tr>";
+                        fila += "<td>" + (long + 1) + "</td>";
+                        fila += "<td>" + b + "</td>";
+                        fila += "<td>" + precio + "</td>";
+                        fila += "<td>" + cant + "</td>";
+                        fila += "<td>" + subTotal + "</td>";
+                        fila += "</tr>";
+
+                        monto = parseFloat(subTotal) + parseFloat(monto);
+
+                        $('#tDetalle tbody').append(fila);
+
+                        $('#tbTotal').val(monto);
+                    }
+
+                    function SentDetails(detail) {
+                        var pack = JSON.stringify(detail);
+                        $.ajax(
+                            {
+                                type: "POST",
+                                url: "/VentasDetalles/Save",
+                                data: pack,
+                                contentType: "application/json",
+                                success: function (data) {
+                                    if (!data) {
+                                        alert("No puedo guardar el detalle");
+                                    }
+                                    else {
+                                        alert("Se Guardo");
+                                    }
+                                }
+                            });
+                    }
+
+                    function EnviarVentas(venta) {
+                        alert(venta.VentaId);
+                        $.ajax(
+                            {
+                                method: "POST",
+                                url: "/Ventas/Save",
+                                data: venta,
+                                success: function (id) {
+                                    if (parseInt(id) > 0) {
+                                        CrearDetalle(id);
+                                    }
+                                    else {
+                                        alert("");
+                                    }
+                                }
+                            });
+                    };
+
+                    function CrearVentas() {
+                        var a = $('#ComboBox').find('option:selected').attr('id');
+
+                        var c = $('#ComboBoxM').find('option:selected');
+                        var d = c.text();
+
+                        var cant = $('#tbCantidad').val();
+                        var total = $('#tbTotal').val();
+                        var prec = $('#tbPrecio').val();
+                        var fec = $('#dpFecha').val();
+                        var subtotal = $('#tbSubTotal').val();
+
+                        var ventas = {
+                            VentaId: 0,
+                            Cantidad: cant,
+                            Total: total,
+                            SubTotal: subtotal,
+                            FechaVenta: fec,
+                            Precio: prec,
+                            Medicina: d,
+                            TipoVentaId: a
+                        }
+                        //alert(ventas.VentaId);
+                        EnviarVentas(ventas);
+                    }
+
+                    function Seleccionar() {
+                        var precio = $('#ComboBoxM').find('option:selected').attr('value');
+
+                        $('#tbPrecio').val(precio);
+                    }
+
+                    function CargarMedicinas() {
+                        $.getJSON("/Medicinas/Lista",
+                            {
+                                id: 1
+                            },
+                            function (lista) {
+                                $.each(lista, function (index, lista) {
+                                    var Id = lista.medicinaId;
+                                    var cli = lista.nombre;
+                                    var ser = lista.precioVenta;
+                                    var option = "<option id='" + Id + "'value ='" + ser + "'>" + cli + "</option>";
+                                    $('#ComboBoxM').append(option);
+                                });
+                            });
+                    }
+
+                    function LlenarTipoVenta() {
+                        $.getJSON("/Ventas/Lista",
+                            {
+                                id: 1
+                            },
+                            function (lista) {
+                                $.each(lista, function (index, lista) {
+                                    var Id = lista.tipoVentaId;
+                                    var ser = 0;
+                                    var cli = lista.descripcion;
+                                    var option = "<option id='" + Id + "'value='" + ser + "'>" + cli + "</option>";
+                                    $('#ComboBox').append(option);
+                                });
+                            });
+                    }
+
+
+                </script>
+            }
+        }

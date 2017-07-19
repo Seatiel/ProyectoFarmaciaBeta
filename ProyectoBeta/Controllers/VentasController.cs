@@ -47,9 +47,25 @@ namespace ProyectoBeta.Controllers
         }
 
         // GET: Ventas
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-            return View(await _context.Ventas.ToListAsync());
+
+            var ventas = from v in _context.Ventas
+                            select v;
+
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                ventas = ventas.Where(s => s.Medicina.Contains(searchString));
+
+            }
+
+
+
+
+
+            return View(await ventas.ToListAsync());
+
         }
 
         // GET: Ventas/Details/5
@@ -73,6 +89,8 @@ namespace ProyectoBeta.Controllers
         // GET: Ventas/Create
         public IActionResult Create()
         {
+            Ventas venta = new Ventas();
+            venta.FechaVenta = DateTime.Today;
             return View();
         }
 
