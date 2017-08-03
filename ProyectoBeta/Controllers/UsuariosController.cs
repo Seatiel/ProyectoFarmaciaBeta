@@ -17,7 +17,7 @@ namespace ProyectoBeta.Controllers
 
         public UsuariosController(Context db)
         {
-            _db = db;    
+            _db = db;
         }
 
         // GET: Usuarios
@@ -25,7 +25,7 @@ namespace ProyectoBeta.Controllers
         {
 
             var usuarios = from u in _db.Usuarios
-                            select u;
+                           select u;
 
 
             if (!String.IsNullOrEmpty(searchString))
@@ -101,15 +101,11 @@ namespace ProyectoBeta.Controllers
                 ClaimsPrincipal principal = new ClaimsPrincipal(Identidad);
                 HttpContext.Authentication.SignInAsync("CookiePolicy", principal);
                 return RedirectToAction("Index", "Home");
-
-
             }
-
             else
             {
                 ModelState.AddModelError("", "El nombre de usuario o la contrasena esta mal escrita");
             }
-
             return View();
         }
 
@@ -120,7 +116,6 @@ namespace ProyectoBeta.Controllers
                 ViewBag.NombreUsuario = HttpContext.Session.GetString("NombreUsuario");
                 return View();
             }
-
             else
             {
                 return RedirectToAction("Home");
@@ -132,25 +127,24 @@ namespace ProyectoBeta.Controllers
             HttpContext.Authentication.SignOutAsync("CookiePolicy");
             HttpContext.Session.Clear();
 
-            return RedirectToAction("Index" , "Home");
+            return RedirectToAction("Index", "Home");
         }
 
-
-    // POST: Usuarios/Create
-    // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-    // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-    //[HttpPost]
-    //    [ValidateAntiForgeryToken]
-    //    public async Task<IActionResult> Create([Bind("UsuarioId,Nombre,Apellido,Email,NombreUsuario,Clave,ConfirmarClave")] Usuarios usuarios)
-    //    {
-    //        if (ModelState.IsValid)
-    //        {
-    //            _context.Add(usuarios);
-    //            await _context.SaveChangesAsync();
-    //            return RedirectToAction("Index");
-    //        }
-    //        return View(usuarios);
-    //    }
+        // POST: Usuarios/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //    [ValidateAntiForgeryToken]
+        //    public async Task<IActionResult> Create([Bind("UsuarioId,Nombre,Apellido,Email,NombreUsuario,Clave,ConfirmarClave")] Usuarios usuarios)
+        //    {
+        //        if (ModelState.IsValid)
+        //        {
+        //            _context.Add(usuarios);
+        //            await _context.SaveChangesAsync();
+        //            return RedirectToAction("Index");
+        //        }
+        //        return View(usuarios);
+        //    }
 
         // GET: Usuarios/Edit/5
         public async Task<IActionResult> Edit(int? id)

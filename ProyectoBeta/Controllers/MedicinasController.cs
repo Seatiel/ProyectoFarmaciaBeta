@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ProyectoBeta.Models;
 using Microsoft.AspNetCore.Authorization;
+using ProyectoBeta.BLL;
 
 namespace ProyectoBeta.Controllers
 {
@@ -17,30 +18,21 @@ namespace ProyectoBeta.Controllers
 
         public MedicinasController(Context context)
         {
-            _context = context;    
+            _context = context;
         }
 
         public async Task<IActionResult> Index(string searchString)
         {
-
             var medicinas = from m in _context.Medicinas
                             select m;
             var categoria = from c in _context.Categorias
                             select c;
-
-
             if (!String.IsNullOrEmpty(searchString))
             {
                 medicinas = medicinas.Where(s => s.Nombre.Contains(searchString));
-                
+
             }
-
-
-
-
-
             return View(await medicinas.ToListAsync());
-
         }
 
         //[HttpPost]
@@ -49,31 +41,95 @@ namespace ProyectoBeta.Controllers
         //    return "From [HttpPost]Index: filter on " + searchString;
         //}
 
+        //[HttpGet]
+        //public IActionResult Listar()
+        //{
+        //    List<Medicinas> listado = MedicinasBLL.GetLista();
+        //    if (listado.Count > 0)
+        //        return Json(listado);
+        //    return Json(null);
+        //}
+
+        //[HttpGet]
+        //public IActionResult Buscar(int? medicinaId)
+        //{
+        //    var medicina = MedicinasBLL.Buscar(medicinaId);
+        //    return Json(medicina);
+        //}
+
         [HttpGet]
-        public JsonResult Lista(int id)
+        public JsonResult Buscar(int? medicinaId)
         {
-            var listado = MedicinasBLL.GetLista();
-
-            return Json(listado);
-        }
-
-        [HttpPost]
-        public JsonResult Save(Medicinas nueva)
-        {
-            int id = 0;
-            if (ModelState.IsValid)
+            Medicinas med = MedicinasBLL.Buscar(medicinaId);
+            if (med != null)
             {
-                if (MedicinasBLL.Insertar(nueva))
-                {
-                    id = nueva.MedicinaId;
-                }
+                return Json(med);
             }
             else
             {
-                id = +1;
+                return Json(false);
             }
-            return Json(id);
         }
+
+        [HttpPost]
+        public IActionResult Guardar(Medicinas med)
+        {
+            bool resultado = false;
+            if (ModelState.IsValid)
+            {
+                resultado = MedicinasBLL.Guardar(med);
+            }
+            return Json(resultado);
+        }
+
+        [HttpPost]
+        public IActionResult Modificar(Medicinas med)
+        {
+            bool resultado = false;
+            if (ModelState.IsValid)
+            {
+                if (MedicinasBLL.Buscar(med.MedicinaId) != null)
+                    resultado = MedicinasBLL.Modificar(med);
+            }
+            return Json(resultado);
+        }
+
+        [HttpPost]
+        public IActionResult Eliminar(Medicinas med)
+        {
+            bool resultado = false;
+            if (ModelState.IsValid)
+            {
+                if (MedicinasBLL.Buscar(med.MedicinaId) != null)
+                    resultado = MedicinasBLL.Eliminar(med);
+            }
+            return Json(resultado);
+        }
+
+        [HttpGet]
+        public IActionResult Lista(int id)
+        {
+            var listado = MedicinasBLL.GetLista();
+            return Json(listado);
+        }
+
+        //[HttpPost]
+        //public JsonResult Guardar(Medicinas med)
+        //{
+        //    int id = 0;
+        //    if (ModelState.IsValid)
+        //    {
+        //        if (MedicinasBLL.Guardar(med))
+        //        {
+        //            id = med.MedicinaId;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        id = +1;
+        //    }
+        //    return Json(id);
+        //}
 
         // GET: Medicinas
         //public async Task<IActionResult> Index()

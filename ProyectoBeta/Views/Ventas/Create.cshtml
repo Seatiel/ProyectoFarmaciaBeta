@@ -2,8 +2,6 @@
     @{
         ViewBag.Title = "Create";
     }
-    <h2>Create</h2>
-
 
     @using (Html.BeginForm())
     {
@@ -13,8 +11,7 @@
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <div class="form-group col-lg-12">
-                <div class=" input-group">
-                    
+                <div class=" input-group">                    
                     <input class="form-control input-group-sm col-2" type="date" id="dpFecha" />
                     <select class="form-control selected" id="ComboBox"> <option selected="selected" disabled="disabled">Tipo de venta</option></select>
                 </div>
@@ -23,7 +20,6 @@
                 <label>Ventas</label>
                 <div class="input-group">
                     <select class="form-control selected" id="ComboBoxM" onchange="Seleccionar()"> <option selected="selected" disabled="disabled">Medicinas</option></select>
-
                     <input class="form-control input-group-sm col-2" type="text" id="tbPrecio" readonly placeholder="Precio" />
                     <input class="form-control input-group-sm col-2" type="text" id="tbCantidad" placeholder="Cantidad" />
                     <button type="button" class="btn btn-default" id="btnAgregar" onclick="AgregarDetalle()">Agregar</button>
@@ -64,9 +60,6 @@
             document.getElementById('dpFecha').placeholder = Date();
         }
     </script>
-
-
-
         @section Scripts {
             @{await Html.RenderPartialAsync("_ValidationScriptsPartial");
 
@@ -100,8 +93,7 @@
                             //alert(detalles);
                             SentDetails(detalles);
                         });
-
-                    }
+                    };
 
                     function AgregarDetalle() {
 
@@ -127,7 +119,7 @@
                         $('#tDetalle tbody').append(fila);
 
                         $('#tbTotal').val(monto);
-                    }
+                    };
 
                     function SentDetails(detail) {
                         var pack = JSON.stringify(detail);
@@ -146,7 +138,7 @@
                                     }
                                 }
                             });
-                    }
+                    };
 
                     function EnviarVentas(venta) {
                         alert(venta.VentaId);
