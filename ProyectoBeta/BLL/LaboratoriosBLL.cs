@@ -1,4 +1,5 @@
-﻿using ProyectoBeta.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using ProyectoBeta.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,67 +9,92 @@ namespace ProyectoBeta.Models
 {
     public class LaboratoriosBLL
     {
-        public static bool Insertar(Laboratorios laboratorio)
-        {
-            bool retorno = false;
 
-            try
+        public static bool Guardar(Laboratorios lab)
+        {
+            using (var conexion = new Context())
             {
-                using (var db = new Context())
+                try
                 {
-                    db.Laboratorios.Add(laboratorio);
-                    db.SaveChanges();
-                    db.Dispose();
-
-                    retorno = true;
+                    conexion.Laboratorios.Add(lab);
+                    if (conexion.SaveChanges() > 0)
+                    {
+                        return true;
+                    }
                 }
-               
-            }catch(Exception)
-            {
-                throw;
+                catch (Exception)
+                {
+
+                    throw;
+                }
             }
-
-            return retorno;
+            return false;
         }
 
-        public static Laboratorios Buscar(int id)
+
+        public static Laboratorios Buscar(int? id)
         {
-            var db = new Context();
+            Laboratorios lab = null;
+            using (var db = new Context())
+            {
+                try
+                {
+                    lab = db.Laboratorios.Find(lab);
+                }
+                catch (Exception)
+                {
 
-            return db.Laboratorios.Find(id);
+                    throw;
+                }
+            }
+            return lab;
         }
 
-        public static void Eliminar(int id)
+        public static bool Eliminar(Laboratorios lab)
         {
             using (var db = new Context())
             {
-                var laboratorio = new Laboratorios();
+                try
+                {
+                    db.Entry(lab).State = EntityState.Deleted;
+                    if (db.SaveChanges() > 0)
+                        return true;
+                }
+                catch (Exception)
+                {
 
-                laboratorio = db.Laboratorios.Find(id);
-
-                db.Laboratorios.Remove(laboratorio);
-                db.SaveChanges();
+                    throw;
+                }
             }
+            return false;
         }
 
-        public static void Modificar(int id, Laboratorios laboratorio)
+        public static bool Modificar(Laboratorios lab)
         {
             using (var db = new Context())
             {
-                var lab = new Laboratorios();
-                lab = db.Laboratorios.Find(id);
+                try
+                {
+                    db.Entry(lab).State = EntityState.Modified;
+                    if (db.SaveChanges() > 0)
+                        return true;
+                }
+                catch (Exception)
+                {
 
-                lab.Nombre = laboratorio.Nombre;
-                db.SaveChanges();
+                    throw;
+                }
             }
+            return false;
         }
 
         public static List<Laboratorios>GetLista()
         {
             var lista = new List<Laboratorios>();
-            var db = new Context();
-
-            lista = db.Laboratorios.ToList();
+            using (var db = new Context())
+            {
+                lista = db.Laboratorios.ToList();
+            }
 
             return lista;
 
@@ -77,10 +103,11 @@ namespace ProyectoBeta.Models
         public static List<Laboratorios>GetLista(int id)
         {
             var lista = new List<Laboratorios>();
-            var db = new Context();
+            using (var db = new Context())
+            {
+                lista = db.Laboratorios.Where(l => l.LaboratorioId == id).ToList();
 
-            lista = db.Laboratorios.Where(l => l.LaboratorioId == id).ToList();
-
+            }
             return lista;
 
         }
@@ -88,8 +115,7 @@ namespace ProyectoBeta.Models
         public static List<Laboratorios>GetLista(string nombre)
         {
             var lista = new List<Laboratorios>();
-            var db = new Context();
-
+            using(var db = new Context())
             lista = db.Laboratorios.Where(l => l.Nombre == nombre).ToList();
 
             return lista;

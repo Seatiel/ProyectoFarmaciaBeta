@@ -1,42 +1,149 @@
 @model ProyectoBeta.Models.Laboratorios
+    @{
+        ViewBag.Title = "Create";
+    }
+    <h2>Create</h2>
 
-@{
-    ViewData["Title"] = "Create";
-}
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
 
-<h2>Create</h2>
+        <div class="form-horizontal">
+            <h4>Medicinas</h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-<form asp-action="Create">
-    <div class="form-horizontal">
-        <h4>Laboratorios</h4>
-        <hr />
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <div class="form-group">
-            <label asp-for="Nombre" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="Nombre" class="form-control" />
-                <span asp-validation-for="Nombre" class="text-danger"></span>
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <div class="input-group">
+                        <input class="form-control input" type="text" id="tbLaboratorioId" placeholder="LaboratorioId" />
+                        <button class="btn btn-group-sm btn-success" type="button" id="btnBuscar" onclick="BuscarLaboratorio()">Buscar</button>
+                    </div>
+                </div>
+                <div class="form-group col-lg-12">
+                    <div class="input-group">
+                        <input class="form-control input-group-sm col-2" type="text" id="tbNombre" placeholder="Nombre" />
+                    </div>
+                </div>
+                <div class="form-group col-lg-12">
+                    <div class="input-group">
+                        <input class="form-control input-group-sm col-2" type="text" id="tbFechaIngreso" placeholder="FechaIngreso" required readonly/>
+                    </div>
+                </div>
+                <div class="form-group text-center col-xl-12">
+                    <div class="col-md-offset-2 col-md-10">
+                        <button type="button" class="btn btn-info col-sm-2" id="btnLimpiar" onclick="LimpiarCampos()">Nuevo</button>
+                        <button type="button" class="btn btn-success col-sm-2" id="btnCrear" onclick="ConstruirLaboratorio(1)">Crear</button>
+                        <button type="button" class="btn btn-warning col-sm-2" id="btnModificar" onclick="ConstruirLaboratorio(2)">Modificar</button>
+                        <button type="button" class="btn btn-danger col-sm-2" id="btnEliminar" onclick="ConstruirLaboratorio(3)">Eliminar</button>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="form-group">
-            <label asp-for="FechaIngreso" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="FechaIngreso" class="form-control" />
-                <span asp-validation-for="FechaIngreso" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
-        </div>
+    }
+    <div>
+        <a asp-action="Index">Back to List</a>
     </div>
-</form>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+            <script type="text/javascript">
+
+                function ConstruirLaboratorio(opc) {
+                    var laboratorioId = $('#tbLaboratorioId').val();
+                    var nombre = $('#tbNombre').val();
+                    var fechaIngreso = $('#tbFechaIngreso').val();
+
+                    var laboratorio = {
+                        laboratorioId: 0,
+                        Nombre: nombre,
+                        FechaIngreso: fechaIngreso
+                    }
+                    if (opc == 1) {
+                        CrearLaboratorio(laboratorio);
+                    } else if (opc == 2) {
+                        ModificarLaboratorio(laboratorio);
+                    } else if (opc == 3) {
+                        EliminarLaboratorio(laboratorio);
+                    }
+                }
+
+                function CrearLaboratorio(laboratorio) {
+                    $.ajax({
+                        method: "POST",
+                        url: "/Laboratorios/Guardar",
+                        data: laboratorio,
+                        success: function (resultado) {
+                            if (resultado) {
+                                alert("El laboratorio fue registrado exitosamente.");
+                            }
+                            else {
+                                alert("No se pudo procesar su solicitud");
+                            }
+                            LimpiarCampos();
+                        },
+                        error: function (error) {
+                            console.log(error);
+                        }
+                    })
+                }
+
+                function ModificarLaboratorio(laboratorio) {
+                    $.ajax({
+                        method: "POST",
+                        url: "/Laboratorios/Modificar",
+                        data: laboratorio,
+                        success: function (resultado) {
+                            if (resultado) {
+                                alert("El laboratorios ha sido modificado.");
+                            }
+                            else {
+                                alert("Su solicitud no ha podido ser procesada");
+                            }
+                            LimpiarCampos();
+                        }
+                    })
+                }
+                function EliminarLaboratorio(laboratorio) {
+                    $.ajax({
+                        method: "POST",
+                        url: "/Laboratorios/Eliminar",
+                        data: laboratorio,
+                        success: function (resultado) {
+                            if (resultado) {
+                                alert("El laboratorio ha sido eliminado");
+                            }
+                            else {
+                                alert("La solicitud no ha podido ser procesada");
+                            }
+                            LimpiarCampos();
+                        }
+                    })
+                }
+
+                function BuscarLaboratorio() {
+                    var id = $('#tbLaboratorioId').val();
+                    $.getJSON("/Laboratorios/Buscar", { LaboratorioId: id }, function (lab) {
+                        $('#tbNombre').val(lab.nombre);
+                        $('#tbFechaIngreso').val(lab.fechaIngreso);
+                    });
+                }
+
+                function LimpiarCampos() {
+                    $('#tbLaboratorioId').val("");
+                    $('#tbNombre').val("");
+                }
+
+                Date.prototype.yyyymmdd = function () {
+                    var yyyy = this.getFullYear().toString();
+                    var mm = (this.getMonth() + 1).toString();
+                    var dd = this.getDate().toString();
+                    return yyyy + "/" + (mm[1] ? mm : "0" + mm[0]) + "/" + (dd[1] ? dd : "0" + dd[0]);
+                }; var date = new Date(); $('#tbFechaIngreso').val(date.yyyymmdd());
+            </script>
+        }
+    }
+
+
+

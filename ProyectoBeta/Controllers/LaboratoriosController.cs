@@ -28,6 +28,20 @@ namespace ProyectoBeta.Controllers
             return Json(listado);
         }
 
+        [HttpGet]
+        public JsonResult Buscar(int? id)
+        {
+            Laboratorios lab = LaboratoriosBLL.Buscar(id);
+            if (lab != null)
+            {
+                return Json(lab);
+            }
+            else
+            {
+                return Json(false);
+            }
+        }
+
         // GET: Laboratorios
         public async Task<IActionResult> Index(string searchString)
         {
@@ -38,6 +52,58 @@ namespace ProyectoBeta.Controllers
                 laboratorios = laboratorios.Where(s => s.Nombre.Contains(searchString));
             }
             return View(await laboratorios.ToListAsync());
+        }
+
+        [HttpPost]
+        public JsonResult Guardar(Laboratorios lab)
+        {
+            bool resultado = false;
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    DateTime now = DateTime.Now;
+                    int y, m, d, h, min, s;
+                    y = lab.FechaIngreso.Year;
+                    m = lab.FechaIngreso.Month;
+                    d = lab.FechaIngreso.Day;
+                    h = now.Hour;
+                    min = now.Minute;
+                    s = now.Second;
+                    lab.FechaIngreso = new DateTime(y, m, d, h, min, s);
+                    resultado = LaboratoriosBLL.Guardar(lab);
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+            }
+            return Json(resultado);
+        }
+
+        [HttpPost]
+        public IActionResult Eliminar(Laboratorios lab)
+        {
+            bool resultado = false;
+            if (ModelState.IsValid)
+            {
+                if (MedicinasBLL.Buscar(lab.LaboratorioId) != null)
+                    resultado = LaboratoriosBLL.Eliminar(lab);
+            }
+            return Json(resultado);
+        }
+
+        [HttpPost]
+        public IActionResult Modificar(Laboratorios lab)
+        {
+            bool resultado = false;
+            if (ModelState.IsValid)
+            {
+                if (LaboratoriosBLL.Buscar(lab.LaboratorioId) != null)
+                    resultado = LaboratoriosBLL.Modificar(lab);
+            }
+            return Json(resultado);
         }
 
         // GET: Laboratorios/Details/5
