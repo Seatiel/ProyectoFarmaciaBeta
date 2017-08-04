@@ -39,7 +39,7 @@ namespace ProyectoBeta.Models
             {
                 try
                 {
-                    lab = db.Laboratorios.Find(lab);
+                    lab = db.Laboratorios.Find(id);
                 }
                 catch (Exception)
                 {
