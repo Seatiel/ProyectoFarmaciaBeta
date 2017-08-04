@@ -28,26 +28,26 @@ namespace ProyectoBeta.Controllers
             return Json(listado);
         }
 
-        [HttpGet]
-        public JsonResult Buscar(int? labId)
-        {
-            var lab = LaboratoriosBLL.Buscar(labId);
-            return Json(lab);
-        }
-
         //[HttpGet]
-        //public JsonResult Buscar(int? id)
+        //public JsonResult Buscar(int? labId)
         //{
-        //    Laboratorios lab = LaboratoriosBLL.Buscar(id);
-        //    if (lab != null)
-        //    {
-        //        return Json(lab);
-        //    }
-        //    else
-        //    {
-        //        return Json(false);
-        //    }
+        //    var lab = LaboratoriosBLL.Buscar(labId);
+        //    return Json(lab);
         //}
+
+        [HttpGet]
+        public JsonResult Buscar(int id)
+        {
+            Laboratorios lab = LaboratoriosBLL.Buscar(id);
+            if (lab != null)
+            {
+                return Json(lab);
+            }
+            else
+            {
+                return Json(false);
+            }
+        }
 
         // GET: Laboratorios
         public async Task<IActionResult> Index(string searchString)
