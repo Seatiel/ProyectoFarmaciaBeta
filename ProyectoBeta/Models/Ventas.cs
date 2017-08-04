@@ -10,12 +10,13 @@ namespace ProyectoBeta.Models
     {
         [Key]
         public int VentaId { get; set; }
+
         [Required]
         public int TipoVentaId { get; set; }
+
         [Required]
         public DateTime FechaVenta { get; set; }
-        //[Required]
-        //public string Medicina { get; set; }
+        
         [Required]
         public int Cantidad { get; set; }      
 

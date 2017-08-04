@@ -147,7 +147,7 @@ namespace ProyectoBeta.Models
                 try
                 {
                     db.Open();
-                    SqlCommand comando = new SqlCommand("SELECT IDENT_CURRENT('Clientes')", db);
+                    SqlCommand comando = new SqlCommand("SELECT IDENT_CURRENT('Medicinas')", db);
                     identity = Convert.ToInt32(comando.ExecuteScalar());
                     db.Close();
                 }

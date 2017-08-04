@@ -93,11 +93,17 @@ namespace ProyectoBeta.Models
             var lista = new List<Laboratorios>();
             using (var db = new Context())
             {
-                lista = db.Laboratorios.ToList();
-            }
+                try
+                {
+                    lista = db.Laboratorios.ToList();
+                }
+                catch (Exception)
+                {
 
-            return lista;
-
+                    throw;
+                }
+                return lista;
+            }        
         }
 
         public static List<Laboratorios>GetLista(int id)
@@ -105,21 +111,36 @@ namespace ProyectoBeta.Models
             var lista = new List<Laboratorios>();
             using (var db = new Context())
             {
-                lista = db.Laboratorios.Where(l => l.LaboratorioId == id).ToList();
+                try
+                {
+                    lista = db.Laboratorios.Where(l => l.LaboratorioId == id).ToList();
+                }
+                catch (Exception)
+                {
 
+                    throw;
+                }
+                return lista;
             }
-            return lista;
-
         }
 
         public static List<Laboratorios>GetLista(string nombre)
         {
             var lista = new List<Laboratorios>();
-            using(var db = new Context())
-            lista = db.Laboratorios.Where(l => l.Nombre == nombre).ToList();
+            using (var db = new Context())
+            {
+                try
+                {
+                    lista = db.Laboratorios.Where(l => l.Nombre == nombre).ToList();
+                }
+                catch (Exception)
+                {
 
-            return lista;
+                    throw;
+                }
+                return lista;
+            }               
         }
-        
+
     }
 }

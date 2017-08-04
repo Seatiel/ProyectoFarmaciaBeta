@@ -72,7 +72,7 @@ namespace ProyectoBeta.Controllers
         }
 
         [HttpPost]
-        public IActionResult Guardar(Medicinas med)
+        public JsonResult Guardar(Medicinas med)
         {
             bool resultado = false;
             if (ModelState.IsValid)
@@ -83,7 +83,7 @@ namespace ProyectoBeta.Controllers
         }
 
         [HttpPost]
-        public IActionResult Modificar(Medicinas med)
+        public JsonResult Modificar(Medicinas med)
         {
             bool resultado = false;
             if (ModelState.IsValid)
@@ -95,7 +95,7 @@ namespace ProyectoBeta.Controllers
         }
 
         [HttpPost]
-        public IActionResult Eliminar(Medicinas med)
+        public JsonResult Eliminar(Medicinas med)
         {
             bool resultado = false;
             if (ModelState.IsValid)
@@ -107,7 +107,7 @@ namespace ProyectoBeta.Controllers
         }
 
         [HttpGet]
-        public IActionResult Lista(int id)
+        public JsonResult Lista(int id)
         {
             var listado = MedicinasBLL.GetLista();
             return Json(listado);

@@ -126,6 +126,7 @@
                     var id = $('#tbLaboratorioId').val();
                     $.getJSON("/Laboratorios/Buscar", { LaboratorioId: id }, function (lab) {
                         $('#tbNombre').val(lab.nombre);
+
                         $('#tbFechaIngreso').val(lab.fechaIngreso);
                     });
                 }
