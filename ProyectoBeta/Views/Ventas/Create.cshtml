@@ -340,7 +340,7 @@
             function deleteRow(r) {
                 var i = r.parentNode.parentNode.rowIndex;
                 document.getElementById("tabla").deleteRow(i);
-                $('#ServicioList').val($('#ServicioList > option:first').val());
+                $('#MedicinaList').val($('#MedicinaList > option:first').val());
             }
 
             //Id
@@ -351,10 +351,11 @@
             //Siguiente Id
             function NextId() {
                 $.getJSON("/Ventas/LastIndex", function (id) {
-                    $('#tbId').val(id);
+                    $('#tbVentaId').val(id);
                 });
             }
 
+            //Buscar
             function Buscar()
             {
                 Detalle.length = 0;
@@ -363,7 +364,9 @@
                     { VentaId: id }, function (vent)
                     {
                         $('dpFecha').val(vent.fecha);
-                        $('#')
+                        $('#TipoVentaList').find('option').remove();
+                        $('#MedicinaList').find('option').remove();
+                        var opc = "<option id='" + vent.tipoVentaId + "'value='" + 1 + "'>" + vent.TipoVenta + "</option>"
 
                     }
 
