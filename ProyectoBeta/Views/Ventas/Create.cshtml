@@ -162,7 +162,7 @@
                     Cantidad: cant,
                     SubTotal: SubTt,
                     ITBIS: Itbis,
-                    Fecha: fecha,
+                    FechaVenta: fecha,
                     Total: total
                 }
                 var EncabezadoDetalle = {
@@ -355,10 +355,22 @@
                 });
             }
 
-            
+            function Buscar()
+            {
+                Detalle.length = 0;
+                var id = $('tbVentaId').val();
+                $.getJSON("/Ventas/Buscar"),
+                    { VentaId: id }, function (vent)
+                    {
+                        $('dpFecha').val(vent.fecha);
+                        $('#')
+
+                    }
 
 
+            }
 
+           
         </script>
     }
 }

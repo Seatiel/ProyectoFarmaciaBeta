@@ -33,6 +33,13 @@ namespace ProyectoBeta.Controllers
             return Json(id);
         }
 
+        [HttpGet]
+        public JsonResult Buscar(int VentaId)
+        {
+            Ventas venta = VentasBLL.BuscarEncabezado(VentaId);
+            return Json(venta);
+        }
+
         [HttpPost]
         public JsonResult GuardarVentas(ClaseMaestra Venta)
         {
