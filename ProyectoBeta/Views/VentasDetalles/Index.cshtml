@@ -19,10 +19,19 @@
                     @Html.DisplayNameFor(model => model.MedicinaId)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Precio)
+                    @Html.DisplayNameFor(model => model.Medicina)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Cantidad)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Precio)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Monto)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Descuento)
                 </th>
             <th></th>
         </tr>
@@ -37,15 +46,24 @@
                 @Html.DisplayFor(modelItem => item.MedicinaId)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Precio)
+                @Html.DisplayFor(modelItem => item.Medicina)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Cantidad)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                @Html.DisplayFor(modelItem => item.Precio)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Monto)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Descuento)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.DetalleId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.DetalleId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.DetalleId">Delete</a>
             </td>
         </tr>
 }

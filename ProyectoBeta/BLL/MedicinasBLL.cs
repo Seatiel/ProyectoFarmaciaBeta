@@ -106,23 +106,23 @@ namespace ProyectoBeta.Models
             return lista;
         }
 
-        //public static List<Medicinas> GetListId(int id)
-        //{
-        //    List<Medicinas> list = new List<Medicinas>();
-        //    using (var db = new Context())
-        //    {
-        //        try
-        //        {
-        //            list = db.Medicinas.Where(p => p.MedicinaId == id).ToList();
-        //        }
-        //        catch (Exception)
-        //        {
+        public static List<Medicinas> GetListId(int id)
+        {
+            List<Medicinas> list = new List<Medicinas>();
+            using (var db = new Context())
+            {
+                try
+                {
+                    list = db.Medicinas.Where(p => p.MedicinaId == id).ToList();
+                }
+                catch (Exception)
+                {
 
-        //            throw;
-        //        }
-        //    }
-        //    return list;
-        //}
+                    throw;
+                }
+            }
+            return list;
+        }
 
         public static bool Eliminar(int? id)
         {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProyectoBeta.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,8 +10,8 @@ namespace ProyectoBeta.BLL
     {
         public static List<Models.Usuarios> GetLista()
         {
-            var lista = new List<Models.Usuarios>();
-            using (var db = new Models.Context())
+            List<Usuarios> lista = new List<Usuarios>();
+            using (var db = new Context())
             {
                 try
                 {
@@ -23,7 +24,6 @@ namespace ProyectoBeta.BLL
                 }
                 return lista;
             }
-
         }
     }
 }

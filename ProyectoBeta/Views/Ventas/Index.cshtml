@@ -9,13 +9,6 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-
-<form asp-controller="Ventas" asp-action="Index" method="get">
-    <p>
-        Title: <input type="text" name="SearchString">
-        <input type="submit" value="Filter" />
-    </p>
-</form>
 <table class="table">
     <thead>
         <tr>
@@ -23,13 +16,16 @@
                     @Html.DisplayNameFor(model => model.TipoVentaId)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Medicina)
+                    @Html.DisplayNameFor(model => model.FechaVenta)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Cantidad)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.FechaVenta)
+                    @Html.DisplayNameFor(model => model.SubTotal)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ITBIS)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Total)
@@ -44,13 +40,16 @@
                 @Html.DisplayFor(modelItem => item.TipoVentaId)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Medicina)
+                @Html.DisplayFor(modelItem => item.FechaVenta)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Cantidad)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.FechaVenta)
+                @Html.DisplayFor(modelItem => item.SubTotal)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ITBIS)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Total)

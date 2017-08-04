@@ -1,39 +1,67 @@
 @model ProyectoBeta.Models.Ventas
-    @{
-        ViewBag.Title = "Create";
-    }
+@{
+    ViewBag.Title = "Create";
+}
 
-    @using (Html.BeginForm())
-    {
-        @Html.AntiForgeryToken()
-        <div class="form-horizontal">
-            <h4>Ventas</h4>
-            <hr />
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            <div class="form-group col-lg-12">
-                <div class=" input-group">                    
-                    <input class="form-control input-group-sm col-2" type="date" id="dpFecha" />
-                    <select class="form-control selected" id="ComboBox"> <option selected="selected" disabled="disabled">Tipo de venta</option></select>
-                </div>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <h4>Ventas</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            <div class="input-group">
+                <input class="form-control input-group-lg col-2" type="text" id="tbVentaId" placeholder="VentaId" />
+                <button class="btn btn-group-sm btn-success" type="button" id="btnBuscar" onclick="Buscar()">Buscar</button>
             </div>
-            <div class="form-group" size="100">
-                <label>Ventas</label>
-                <div class="input-group">
-                    <select class="form-control selected" id="ComboBoxM" onchange="Seleccionar()"> <option selected="selected" disabled="disabled">Medicinas</option></select>
-                    <input class="form-control input-group-sm col-2" type="text" id="tbPrecio" readonly placeholder="Precio" />
-                    <input class="form-control input-group-sm col-2" type="text" id="tbCantidad" placeholder="Cantidad" />
-                    <button type="button" class="btn btn-default" id="btnAgregar" onclick="AgregarDetalle()">Agregar</button>
-                </div>
+        </div>
+        <div class="form-group">
+            <div class=" input-group">
+                <span class="input-group-addon">Fecha</span>
+                <input class="form-control input-group input" type="text" placeholder="Fecha" id="dpFecha" required readonly />
             </div>
-            <div class="table-responsive">
-                <table class="table table-hover table-sm table-bordered" id="tDetalle">
+        </div>
+        <div class="form-group">
+            <div class="input-group">
+                <span class="input-group-addon">Tipo de Venta</span>
+                <select class="form-control selected" id="TipoVentaList">
+                    <option value="0" disabled selected> </option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="input-group">
+                <span class="input-group-addon">Medicina</span>
+                <select class="form-control selected" id="MedicinaList">
+                    <option value="0" disabled selected> </option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="input-group">
+                <span class="input-group-addon">Precio</span>
+                <input class="form-control input-group-sm col-2" type="text" id="tbPrecio" placeholder="Precio" disabled />
+                <span class="input-group-addon">Cantidad</span>
+                <input class="form-control input-group-sm col-2" type="text" id="tbCantidad" placeholder="Cantidad" />
+                <span class="input-group-addon">Descuento</span>
+                <input class="form-control input-group-sm col-2" type="text" id="tbDescuento" placeholder="Descuento" />
+                <button type="button" class="btn btn-success col-sm-2" id="btnAgregar" onclick="AgregarDetalle()">Agregar</button>
+            </div>
+        </div>
+        <div>
+            <div id="content">
+                <table id="tabla" class="table table-bordered">
                     <thead>
                         <tr>
                             <th>#</th>
+                            <th>MedicinaId</th>
                             <th>Medicina</th>
                             <th>Precio</th>
                             <th>Cantidad</th>
-                            <th>Sub-Total</th>
+                            <th>Descuento</th>
+                            <th>SubTotal</th>
+                            <th>Eliminar</th>
                         </tr>
                     </thead>
                     <tbody id="tbBody"></tbody>
@@ -41,188 +69,297 @@
             </div>
             <div class="form-group">
                 <div class="input-group">
+                    <span class="input-group-addon">Monto:</span>
+                    <input class="form-control input-group-lg col-2" type="text" id="tbMonto" value="0" readonly />
+                    <span class="input-group-addon">ITBIS:</span>
+                    <input class="form-control input-group-lg col-2" type="text" id="tbItbis" value="0" readonly />
                     <span class="input-group-addon">Total:</span>
                     <input class="form-control input-group-lg col-2" type="text" id="tbTotal" value="0" readonly />
                 </div>
             </div>
             <div class="form-group text-center col-xl-12">
                 <div class="col-md-offset-2 col-md-10">
-                    <button type="button" class="btn btn-default col-sm-2" id="btnCrear" onclick="CrearVentas()">Crear</button>
+                    <button type="button" class="btn btn-info col-sm-2" id="btnLimpiar" onclick="Limpiar(0)">Nuevo</button>
+                    <button type="button" class="btn btn-success col-sm-2" id="btnCrear" onclick="CrearVenta()">Crear</button>
+                    <button type="button" class="btn btn-warning col-sm-2" id="btnModificar" onclick="ConstruirVenta(1)">Modificar</button>
+                    <button type="button" class="btn btn-danger col-sm-2" id="btnEliminar" onclick="ConstruirVenta(2)">Eliminar</button>
                 </div>
             </div>
         </div>
-    }
-    <div>
-        <a asp-action="Index">Back to List</a>
     </div>
-    <script>
+}
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+@*<script>
         function myFunction() {
             document.getElementById('dpFecha').placeholder = Date();
         }
-    </script>
-        @section Scripts {
-            @{await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    </script>*@
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        <script src="~/js/bootstrap-datepicker.min.js"></script>
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <script type="text/javascript" src="~/js/bootstrap-datepicker.min.js"></script>
+        <script src="~/js/moment.min.js"></script>
+        <script src="~/js/moment-with-locales.min.js"></script>
+        <script src="~/js/jquery-3.1.1.min.js"></script>
+        <script src="~/js/jquery-ui.js"></script>
+        <script type="text/javascript">
+            //$(document).ready(function () {
+            //    CargarMedicinas();
+            //    LlenarTipoVenta();
+            //})
+            CargaDropDownList();
+            var contador = 0, Detalle = new Array(), VentId = 0;
 
-                <script type="text/javascript">
-                    $(document).ready(function () {
-                        CargarMedicinas();
-                        LlenarTipoVenta();
-                    })
+            //ArmaVenta
+            function ConstruirVenta(opc) {
+                var Id = $('#tbVentaId').val();
+                var MedicinaListId = $('#MedicinaList').find('option:selected').attr('id');
+                var MedicinaList = $('#MedicinaList').find('option:selected');
 
-                    function CrearDetalle(Id) {
+                var total = $('#tbTotal').val();
+                var fecha = $('#dpFecha').val();
 
-                        $('#tbBody tr').each(function () {
-                            var detalles = new Array();
-                            var ventaId = Id;
-                            var medicina = $(this).find('td').eq(1).html();
-                            var precio = $(this).find('td').eq(2).html();
-                            var cantidad = $(this).find('td').eq(3).html();
-                            var subTotal = $(this).find('td').eq(4).html();
-                            var total = $("#tbTotal").val();
-
-                            detalles.push(
-                                {
-                                    Id: 0,
-                                    VentaId: ventaId,
-                                    MedicinaId: medicina,
-                                    Precio: precio,
-                                    Total: total,
-                                    Cantidad: cantidad
-                                });
-
-                            //alert(detalles);
-                            SentDetails(detalles);
-                        });
-                    };
-
-                    function AgregarDetalle() {
-
-                        var long = $("#tbBody tr").length;
-
-                        var monto = $('#tbTotal').val();
-                        var a = $('#ComboBoxM').find('option:selected');
-                        var b = a.text();
-                        var precio = $("#tbPrecio").val();
-                        var cant = $("#tbCantidad").val();
-                        var subTotal = precio * cant;
-
-                        var fila = "<tr>";
-                        fila += "<td>" + (long + 1) + "</td>";
-                        fila += "<td>" + b + "</td>";
-                        fila += "<td>" + precio + "</td>";
-                        fila += "<td>" + cant + "</td>";
-                        fila += "<td>" + subTotal + "</td>";
-                        fila += "</tr>";
-
-                        monto = parseFloat(subTotal) + parseFloat(monto);
-
-                        $('#tDetalle tbody').append(fila);
-
-                        $('#tbTotal').val(monto);
-                    };
-
-                    function SentDetails(detail) {
-                        var pack = JSON.stringify(detail);
-                        $.ajax(
-                            {
-                                type: "POST",
-                                url: "/VentasDetalles/Save",
-                                data: pack,
-                                contentType: "application/json",
-                                success: function (data) {
-                                    if (!data) {
-                                        alert("No puedo guardar el detalle");
-                                    }
-                                    else {
-                                        alert("Se Guardo");
-                                    }
-                                }
-                            });
-                    };
-
-                    function EnviarVentas(venta) {
-                        alert(venta.VentaId);
-                        $.ajax(
-                            {
-                                method: "POST",
-                                url: "/Ventas/Save",
-                                data: venta,
-                                success: function (id) {
-                                    if (parseInt(id) > 0) {
-                                        CrearDetalle(id);
-                                    }
-                                    else {
-                                        alert("");
-                                    }
-                                }
-                            });
-                    };
-
-                    function CrearVentas() {
-                        var a = $('#ComboBox').find('option:selected').attr('id');
-
-                        var c = $('#ComboBoxM').find('option:selected');
-                        var d = c.text();
-
-                        var cant = $('#tbCantidad').val();
-                        var total = $('#tbTotal').val();
-                        var prec = $('#tbPrecio').val();
-                        var fec = $('#dpFecha').val();
-                        var subtotal = $('#tbSubTotal').val();
-
-                        var ventas = {
-                            VentaId: 0,
-                            Cantidad: cant,
-                            Total: total,
-                            SubTotal: subtotal,
-                            FechaVenta: fec,
-                            Precio: prec,
-                            Medicina: d,
-                            TipoVentaId: a
-                        }
-                        //alert(ventas.VentaId);
-                        EnviarVentas(ventas);
-                    }
-
-                    function Seleccionar() {
-                        var precio = $('#ComboBoxM').find('option:selected').attr('value');
-
-                        $('#tbPrecio').val(precio);
-                    }
-
-                    function CargarMedicinas() {
-                        $.getJSON("/Medicinas/Lista",
-                            {
-                                id: 1
-                            },
-                            function (lista) {
-                                $.each(lista, function (index, lista) {
-                                    var Id = lista.medicinaId;
-                                    var cli = lista.nombre;
-                                    var ser = lista.precioVenta;
-                                    var option = "<option id='" + Id + "'value ='" + ser + "'>" + cli + "</option>";
-                                    $('#ComboBoxM').append(option);
-                                });
-                            });
-                    }
-
-                    function LlenarTipoVenta() {
-                        $.getJSON("/Ventas/Lista",
-                            {
-                                id: 1
-                            },
-                            function (lista) {
-                                $.each(lista, function (index, lista) {
-                                    var Id = lista.tipoVentaId;
-                                    var ser = 0;
-                                    var cli = lista.descripcion;
-                                    var option = "<option id='" + Id + "'value='" + ser + "'>" + cli + "</option>";
-                                    $('#ComboBox').append(option);
-                                });
-                            });
-                    }
-
-
-                </script>
+                var cabeza = {
+                    VentaId: Id,
+                    MedicinaId: MedicinaListId,
+                    Medicina: MedicinaList.text(),
+                    Fecha: fecha,
+                    Total: total
+                }
+                var EncabezadoDetalle = {
+                    Encabezado: cabeza,
+                    Detalle: Detalle
+                }
+                if (opc == 1) {
+                    ModificarVenta(EncabezadoDetalle);
+                }
+                else if (opc == 2) {
+                    EliminarVenta(EncabezadoDetalle);
+                }                
             }
-        }
+
+            //Crear
+            function CrearVenta() {
+                var MedicinaListId = $('#MedicinaList').find('option:selected').attr('id');
+                var MedicinaList = $('#MedicinaList').find('option:selected');
+                var TipoVentaListId = $('#TipoVentaList').find('option:selected').attr('id');
+                var TipoVentaList = $('#TipoVentaList').find('option:selected');
+                var Id = $('#tbVentaId').val();
+                var cant = $('#tbCantidad').val();
+                var SubTt = $('#tbCantidad').val();
+                var Itbis = $('#tbItbis').val();
+                var total = $('#tbTotal').val();
+                var fecha = $('#dpFecha').val();
+
+                var Venta = {
+                    VentaId: 0,
+                    MedicinaId: MedicinaListId,
+                    Medicina: MedicinaList.text(),
+                    TipoVentasId: TipoVentaListId,
+                    TipoVenta: TipoVentaList.text(),
+                    Cantidad: cant,
+                    SubTotal: SubTt,
+                    ITBIS: Itbis,
+                    Fecha: fecha,
+                    Total: total
+                }
+                var EncabezadoDetalle = {
+                    Encabezado: Venta,
+                    Detalle: Detalle
+                }
+                Enviar(EncabezadoDetalle);
+            }
+            function Enviar(data) {
+                $.ajax(
+                    {
+                        method: "POST",
+                        url: "/Ventas/GuardarVentas",
+                        data: data,
+                        success: function (id) {
+                            if (parseInt(id) > 0) {
+                                VentId = id;
+                            }
+                        }
+                    });
+            };
+
+            //Modificar
+            function ModificarFactura(EncabezadoDetalle) {
+                console.log(EncabezadoDetalle);
+                $.ajax({
+                    method: "POST",
+                    url: "/Facturas/Modificar",
+                    data: EncabezadoDetalle,
+                    success: function (res) {
+                        if (res != null) {
+                            Contenido.length = 0;
+                            alert("La factura ha sido modificada.");
+                            LimpiarCampos(0);
+                        } else {
+                            alert("No se a podido procesar su solicitud.");
+                        }
+                    },
+                    error: function (error) {
+                    }
+                });
+            }
+
+            //Eliminar
+            function EliminarFactura(EncabezadoDetalle) {
+                $.ajax({
+                    method: "POST",
+                    url: "/Facturas/Eliminar",
+                    data: EncabezadoDetalle,
+                    success: function (res) {
+                        if (res != null) {
+                            alert("La factura ha sido eliminada correctamente.");
+                        }
+                        else {
+                            alert("No se ha podido procesar su solicitud.");
+                        }
+                        LimpiarCampos(0);
+                    }
+                })
+            }
+
+            //Detalle(Actualizar)
+            function ActualizarTabla() {
+                if ($('#tbBody tr').length > 0)
+                    $('#tbBody tr').remove();
+                var monto = 0; var itbis = 0.18; var it; total = 0; contador++;
+                $.each(Detalle, function (index, detalle) {
+                    var fila = '<tr>';
+                    fila += '<td>' + (index + 1) + '</td>';
+                    fila += '<td>' + detalle.MedicinaId + '</td>';
+                    fila += '<td>' + detalle.Medicina + '</td>';
+                    fila += '<td>' + detalle.Precio + '</td>';
+                    fila += '<td>' + detalle.Cantidad + '</td>';
+                    fila += '<td>' + detalle.Descuento + '</td>';
+                    fila += '<td>' + detalle.SubTotal + '</td>';
+                    fila += '<td>' + '<input type="button" value="Delete" onclick="deleteRow(this)"/>' + '</td>';
+                    fila += '</tr>';
+                    $('#tabla').append(fila);
+                    monto += detalle.SubTotal;
+                    it = itbis * monto;
+                    total = monto + it;
+                });
+                $('#tbMonto').val(monto);
+                $('#tbItbis').val(it);
+                $('#tbTotal').val(total);
+            }
+
+            //Agregar(Boton)
+            function AgregarDetalle() {
+                var Id = $('#tbId').val();
+                var MedicinaId = $('#MedicinaList').find('option:selected').attr('id');
+                var Medicina = $('#MedicinaList').find('option:selected');
+                var Precio = $('#tbPrecio').val();
+                var Cantidad = $('#tbCantidad').val();
+                var Descuento = $('#tbDescuento').val();
+                var SubTt = (parseInt(Cantidad) * parseFloat(Precio) - parseFloat(Descuento));
+                var detalle = {
+                    Id: 0,
+                    VentaId: Id,
+                    MedicinaId: MedicinaId,
+                    Medicina: Medicina.text(),
+                    Precio: Precio,
+                    Cantidad: Cantidad,
+                    Descuento: Descuento,
+                    SubTotal: SubTt
+                }
+                Detalle.push(detalle);
+                ActualizarTabla();
+            }
+
+            //Carga DropDownList
+            function CargaDropDownList() {
+                $.getJSON("/Medicinas/Lista",
+                    {
+                        id: 1
+                    },
+                    function (lista) {
+                        $.each(lista, function (index, lista) {
+                            var Id = lista.medicinaId;
+                            var Nombre = lista.nombre;
+                            var Precio = lista.precioVenta;
+                            var option = "<option id='" + Id + "'value='" + Precio + "'>" + Nombre + "</option>";
+                            $('#MedicinaList').append(option);
+                        });
+                    });
+                $.getJSON("/Ventas/ListaTiposVentas",
+                    {
+                        id: 1
+                    },
+                    function (lista) {
+                        $.each(lista, function (index, lista) {
+                            var Id = lista.tipoVentaId;
+                            var Nombre = lista.descripcion;
+                            var option = "<option id='" + Id + "'value='" + 0 + "'>" + Nombre + "</option>";
+                            $('#TipoVentaList').append(option);
+                        });
+
+                    });
+            }
+
+            //Limpiar
+            function Limpiar(modo) {
+                $('#TipoVentaList').find('option').remove();
+                $('#MedicinaList').find('option').remove();
+                CargaDropDownList();
+                $('#TipoVentaList').val($('#TipoVentaList > option:first').val());
+                $('#MedicinaList').val($('#MedicinaList > option:first').val());
+                $('#tbPrecio').val("");
+                $('#tbCantidad').val("");
+                $('#tbDescuento').val("");
+                $('#tbBody tr').remove();
+                contador = 0;
+                $('#tbMonto').val(0);
+                $('#tbItbis').val(0);
+                $('#tbTotal').val(0);
+                $('#tbDescuento').val(0);
+                Detalle.length = 0;
+            }
+
+            //Fecha
+            Date.prototype.yyyymmdd = function () {
+                var yyyy = this.getFullYear().toString();
+                var mm = (this.getMonth() + 1).toString();
+                var dd = this.getDate().toString();
+                return yyyy + "/" + (mm[1] ? mm : "0" + mm[0]) + "/" + (dd[1] ? dd : "0" + dd[0]);
+            }; var date = new Date(); $('#dpFecha').val(date.yyyymmdd());
+
+            //Seleccionar Precio Medicina
+            $("#MedicinaList").change(function () {
+                var Precio = $('#MedicinaList').find('option:selected').attr('value');
+                $('#tbPrecio').val(Precio);
+            })
+
+            //Eliminar Medicina
+            function deleteRow(r) {
+                var i = r.parentNode.parentNode.rowIndex;
+                document.getElementById("tabla").deleteRow(i);
+                $('#ServicioList').val($('#ServicioList > option:first').val());
+            }
+
+            //Id
+            $(document).ready(function () {
+                NextId();
+            });
+
+            //Siguiente Id
+            function NextId() {
+                $.getJSON("/Ventas/LastIndex", function (id) {
+                    $('#tbId').val(id);
+                });
+            }
+
+            
+
+
+
+        </script>
+    }
+}

@@ -6,11 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ProyectoBeta.Models;
-using Microsoft.AspNetCore.Authorization;
 
 namespace ProyectoBeta.Controllers
 {
-    [Authorize(ActiveAuthenticationSchemes = "CookiePolicy")]
     public class VentasController : Controller
     {
         private readonly Context _context;
@@ -20,52 +18,61 @@ namespace ProyectoBeta.Controllers
             _context = context;    
         }
 
-        [HttpPost]
-        public JsonResult Save(Ventas nueva)
+        // GET: Ventas
+        public IActionResult Index()
         {
-            int id = 0;
-            if (ModelState.IsValid)
-            {
-                if (VentasBLL.Insertar(nueva))
-                {
-                    id = nueva.VentaId;
-                }
-            }
-            //else
-            //{
-            //    id = +1;
-            //}
-            return Json(id);
+            return View(VentasBLL.Listar());
         }
 
         [HttpGet]
-        public JsonResult Lista(int id)
+        public JsonResult LastIndex()
+        {
+            int id = VentasBLL.Identity();
+            if (id > 1 || VentasBLL.Listar().Count > 0)
+                ++id;
+            return Json(id);
+        }
+
+        [HttpPost]
+        public JsonResult GuardarVentas(ClaseMaestra Venta)
+        {
+            bool resultado = false;
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    DateTime now = DateTime.Now;
+                    int y, m, d, h, min, s;                    
+                    y = Venta.Encabezado.FechaVenta.Year;
+                    m = Venta.Encabezado.FechaVenta.Month;
+                    d = Venta.Encabezado.FechaVenta.Day;
+                    h = now.Hour;
+                    min = now.Minute;
+                    s = now.Second;
+                    Venta.Encabezado.FechaVenta = new DateTime(y, m, d, h, min, s);
+                    resultado = VentasBLL.Guardar(Venta);
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+            }
+            return Json(resultado);
+        }
+
+        [HttpGet]
+        public JsonResult ListaTiposVentas(int id)
         {
             var listado = TipoVentasBLL.GetLista();
-
             return Json(listado);
         }
 
-        // GET: Ventas
-        public async Task<IActionResult> Index(string searchString)
+        [HttpGet]
+        public JsonResult ListaMedicinas(int id)
         {
-
-            var ventas = from v in _context.Ventas
-                            select v;
-
-
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                ventas = ventas.Where(s => s.Medicina.Contains(searchString));
-
-            }
-
-
-
-
-
-            return View(await ventas.ToListAsync());
-
+            var listado = MedicinasBLL.GetLista();
+            return Json(listado);
         }
 
         // GET: Ventas/Details/5
@@ -89,8 +96,6 @@ namespace ProyectoBeta.Controllers
         // GET: Ventas/Create
         public IActionResult Create()
         {
-            Ventas venta = new Ventas();
-            venta.FechaVenta = DateTime.Today;
             return View();
         }
 
@@ -99,7 +104,7 @@ namespace ProyectoBeta.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("VentaId,TipoVentaId,Medicina,Cantidad,FechaVenta,Total")] Ventas ventas)
+        public async Task<IActionResult> Create([Bind("VentaId,TipoVentaId,FechaVenta,Cantidad,SubTotal,ITBIS,Total")] Ventas ventas)
         {
             if (ModelState.IsValid)
             {
@@ -131,7 +136,7 @@ namespace ProyectoBeta.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("VentaId,TipoVentaId,Medicina,Cantidad,FechaVenta,Total")] Ventas ventas)
+        public async Task<IActionResult> Edit(int id, [Bind("VentaId,TipoVentaId,FechaVenta,Cantidad,SubTotal,ITBIS,Total")] Ventas ventas)
         {
             if (id != ventas.VentaId)
             {

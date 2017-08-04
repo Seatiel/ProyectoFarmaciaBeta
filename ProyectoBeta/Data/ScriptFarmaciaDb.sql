@@ -41,15 +41,21 @@ Descripcion varchar(80)
 create table VentasDetalle(
 DetalleId int identity(1,1) primary key,
 VentaId int,
-Cantidad int
+MedicinaId int,
+Medicina varchar(80),
+Cantidad int,
+Precio money,
+Monto money,
+Descuento money 
 );
 
 Create table Ventas(
 VentaId int identity(1,1) primary key,
 TipoVentaId int,
-Medicina varchar(80),
-Cantidad int,
 FechaVenta date,
+Cantidad int,
+SubTotal money,
+ITBIS money,
 Total money
 );
 

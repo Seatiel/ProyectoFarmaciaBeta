@@ -6,14 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ProyectoBeta.Models;
-using Microsoft.AspNetCore.Authorization;
 
 namespace ProyectoBeta.Controllers
 {
-    [Authorize(ActiveAuthenticationSchemes = "CookiePolicy")]
     public class VentasDetallesController : Controller
     {
-
         private readonly Context _context;
 
         public VentasDetallesController(Context context)
@@ -21,17 +18,10 @@ namespace ProyectoBeta.Controllers
             _context = context;    
         }
 
-        [HttpPost]
-        public JsonResult Save([FromBody]List<VentasDetalle> detalles)
-        {
-            bool resultado = VentasDetallesBLL.Insertar(detalles);
-            return Json(resultado);
-        }
-
         // GET: VentasDetalles
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.VentasDetalle.ToListAsync());
+            return View(VentasDetallesBLL.Listar());
         }
 
         // GET: VentasDetalles/Details/5
@@ -43,7 +33,7 @@ namespace ProyectoBeta.Controllers
             }
 
             var ventasDetalle = await _context.VentasDetalle
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.DetalleId == id);
             if (ventasDetalle == null)
             {
                 return NotFound();
@@ -63,7 +53,7 @@ namespace ProyectoBeta.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,VentaId,MedicinaId,Precio,Cantidad")] VentasDetalle ventasDetalle)
+        public async Task<IActionResult> Create([Bind("DetalleId,VentaId,MedicinaId,Medicina,Cantidad,Precio,Monto,Descuento")] VentasDetalle ventasDetalle)
         {
             if (ModelState.IsValid)
             {
@@ -82,7 +72,7 @@ namespace ProyectoBeta.Controllers
                 return NotFound();
             }
 
-            var ventasDetalle = await _context.VentasDetalle.SingleOrDefaultAsync(m => m.Id == id);
+            var ventasDetalle = await _context.VentasDetalle.SingleOrDefaultAsync(m => m.DetalleId == id);
             if (ventasDetalle == null)
             {
                 return NotFound();
@@ -95,9 +85,9 @@ namespace ProyectoBeta.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,VentaId,MedicinaId,Precio,Cantidad")] VentasDetalle ventasDetalle)
+        public async Task<IActionResult> Edit(int id, [Bind("DetalleId,VentaId,MedicinaId,Medicina,Cantidad,Precio,Monto,Descuento")] VentasDetalle ventasDetalle)
         {
-            if (id != ventasDetalle.Id)
+            if (id != ventasDetalle.DetalleId)
             {
                 return NotFound();
             }
@@ -111,7 +101,7 @@ namespace ProyectoBeta.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!VentasDetalleExists(ventasDetalle.Id))
+                    if (!VentasDetalleExists(ventasDetalle.DetalleId))
                     {
                         return NotFound();
                     }
@@ -134,7 +124,7 @@ namespace ProyectoBeta.Controllers
             }
 
             var ventasDetalle = await _context.VentasDetalle
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.DetalleId == id);
             if (ventasDetalle == null)
             {
                 return NotFound();
@@ -148,7 +138,7 @@ namespace ProyectoBeta.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var ventasDetalle = await _context.VentasDetalle.SingleOrDefaultAsync(m => m.Id == id);
+            var ventasDetalle = await _context.VentasDetalle.SingleOrDefaultAsync(m => m.DetalleId == id);
             _context.VentasDetalle.Remove(ventasDetalle);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
@@ -156,7 +146,7 @@ namespace ProyectoBeta.Controllers
 
         private bool VentasDetalleExists(int id)
         {
-            return _context.VentasDetalle.Any(e => e.Id == id);
+            return _context.VentasDetalle.Any(e => e.DetalleId == id);
         }
     }
 }

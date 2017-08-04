@@ -11,7 +11,7 @@
     <h4>VentasDetalle</h4>
     <hr />
     <dl class="dl-horizontal">
-        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="DetalleId" />
         <dt>
             @Html.DisplayNameFor(model => model.VentaId)
         </dt>
@@ -25,16 +25,34 @@
             @Html.DisplayFor(model => model.MedicinaId)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Precio)
+            @Html.DisplayNameFor(model => model.Medicina)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Precio)
+            @Html.DisplayFor(model => model.Medicina)
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Cantidad)
         </dt>
         <dd>
             @Html.DisplayFor(model => model.Cantidad)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Precio)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Precio)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Monto)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Monto)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Descuento)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Descuento)
         </dd>
     </dl>
     

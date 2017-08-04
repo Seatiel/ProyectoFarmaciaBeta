@@ -10,12 +10,22 @@ namespace ProyectoBeta.Models
     {
         public static List<TipoVentas>GetLista()
         {
-            var lista = new List<TipoVentas>();
-            var db = new Context();
+            List<TipoVentas> lista = new List<TipoVentas>();
+            using (var db = new Context())
+            {
+                try
+                {
+                    lista = db.TipoVentas.ToList();
+                }
+                catch (Exception)
+                {
 
-            lista = db.TipoVentas.ToList();
-
-            return lista;
+                    throw;
+                }
+                return lista;
+            }         
         }
     }
+
+
 }

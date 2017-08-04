@@ -9,15 +9,21 @@ namespace ProyectoBeta.Models
     public class VentasDetalle
     {
         [Key]
-        public int Id { get; set; }
+        public int DetalleId { get; set; }
 
         public int VentaId { get; set; }
 
-        public string MedicinaId { get; set; }
+        public int MedicinaId { get; set; }
+
+        public string Medicina { get; set; }
+
+        public int Cantidad { get; set; }
 
         public decimal Precio { get; set; }
 
-        public int Cantidad { get; set; }
+        public decimal Monto { get; set; }
+
+        public decimal Descuento { get; set; }
 
         public VentasDetalle()
         {
