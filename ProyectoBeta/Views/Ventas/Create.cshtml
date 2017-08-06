@@ -106,12 +106,12 @@
         <script src="~/js/jquery-3.1.1.min.js"></script>
         <script src="~/js/jquery-ui.js"></script>
         <script type="text/javascript">
-            //$(document).ready(function () {
-            //    CargarMedicinas();
-            //    LlenarTipoVenta();
-            //})
+            //Id
+            $(document).ready(function () {
+                NextId();
+            });
             CargaDropDownList();
-            var contador = 0, Detalle = new Array(), VentId = 0;
+            var contador = 0; var id; Detalle = new Array(), VentId = 0;
 
             //ArmaVenta
             function ConstruirVenta(opc) {
@@ -137,9 +137,9 @@
                 }
                 else if (opc == 2) {
                     EliminarVenta(EncabezadoDetalle);
-                }                
+                }
             }
-
+            
             //Crear
             function CrearVenta() {
                 var MedicinaListId = $('#MedicinaList').find('option:selected').attr('id');
@@ -154,7 +154,7 @@
                 var fecha = $('#dpFecha').val();
 
                 var Venta = {
-                    VentaId: 0,
+                    VentaId: id,
                     MedicinaId: MedicinaListId,
                     Medicina: MedicinaList.text(),
                     TipoVentasId: TipoVentaListId,
@@ -228,7 +228,7 @@
             function ActualizarTabla() {
                 if ($('#tbBody tr').length > 0)
                     $('#tbBody tr').remove();
-                var subTotal = 0; var itbis = 0.18; var it = 0; total = 0; contador++;
+                var subTotal = 0; var itbis = 0.18; var it = 0; var total = 0; contador++;
                 $.each(Detalle, function (index, detalle) {
                     var fila = '<tr>';
                     fila += '<td>' + (index + 1) + '</td>';
@@ -252,7 +252,7 @@
 
             //Agregar(Boton)
             function AgregarDetalle() {
-                var Id = $('#tbId').val();
+                var Id = $('#tbVentaId').val();
                 var MedicinaId = $('#MedicinaList').find('option:selected').attr('id');
                 var Medicina = $('#MedicinaList').find('option:selected');
                 var Precio = $('#tbPrecio').val();
@@ -260,7 +260,7 @@
                 var Descuento = $('#tbDescuento').val();
                 var monto = (parseInt(Cantidad) * parseFloat(Precio) - parseFloat(Descuento));
                 var detalle = {
-                    Id: 0,
+                    Id: id,
                     VentaId: Id,
                     MedicinaId: MedicinaId,
                     Medicina: Medicina.text(),
@@ -341,39 +341,61 @@
                 var i = r.parentNode.parentNode.rowIndex;
                 document.getElementById("tabla").deleteRow(i);
                 $('#MedicinaList').val($('#MedicinaList > option:first').val());
-            }
-
-            //Id
-            $(document).ready(function () {
-                NextId();
-            });
+            }            
 
             //Siguiente Id
             function NextId() {
                 $.getJSON("/Ventas/LastIndex", function (id) {
                     $('#tbVentaId').val(id);
+                    id = id;
                 });
             }
 
             //Buscar
-            function Buscar()
-            {
+            function Buscar() {
                 Detalle.length = 0;
-                var id = $('tbVentaId').val();
-                $.getJSON("/Ventas/Buscar"),
-                    { VentaId: id }, function (vent)
-                    {
-                        $('dpFecha').val(vent.fecha);
-                        $('#TipoVentaList').find('option').remove();
-                        $('#MedicinaList').find('option').remove();
-                        var opc = "<option id='" + vent.tipoVentaId + "'value='" + 1 + "'>" + vent.TipoVenta + "</option>"
+                var id = $('#tbVentaId').val();
+                var medicina;
+                $.getJSON("/Ventas/Buscar",
+                    { VentaId : id }, function (vent) {
+                        if (vent != null) {
+                            $('#dpFecha').val(vent.fechaVenta);
+                            $('#TipoVentaList').find('option').remove();
+                            $('#MedicinaList').find('option').remove();
+                            //medicina = vent.medicina;
+                            var opc = "<option id='" + vent.TipoVentasId + "'value='" + 1 + "'>" + vent.TipoVentas + "</option>"
+                            $('#TipoVentaList').append(opc);
+                            var opc1 = "<option id='" + vent.MedicinaId + "'value='" + 1 + "'>" + vent.Medicina + "</option>"
+                            $('#MedicinaList').append(opc1);
 
-                    }
+                            $.getJSON("/VentasDetalles/BuscarVentaD", { VentaId : id }, function (custom) {
+                                $.each(custom, function (index, custom) {
 
-
+                                    var details = {                                        
+                                        DetalleId: custom.id,
+                                        VentaId: id,
+                                        MedicinaId: custom.medicinaId,
+                                        Medicina: custom.medicina,
+                                        Cantidad: custom.cantidad,
+                                        Precio: custom.precio,                                        
+                                        Monto: custom.monto,
+                                        Descuento: custom.descuento
+                                    }
+                                    Detalle.push(details);
+                                    ActualizarTabla();
+                                });
+                            });
+                        }
+                        else if (vent == null) {
+                            alert("La venta que ha solicitado al parecer no esta disponible o ha sido eliminada");
+                        }
+                    });
             }
 
-           
+
+
+
+
         </script>
     }
 }

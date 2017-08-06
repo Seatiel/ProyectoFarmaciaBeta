@@ -16,53 +16,66 @@
         <div class="form-horizontal">
             <div class="form-group">
                 <div class="input-group">
-                    <input class="form-control input" type="text" id="tbMedicinaId" placeholder="MedicinaId" />
+                    <input class="form-control input-group-lg col-2" type="text" id="tbMedicinaId" placeholder="MedicinaId" />
                     <button class="btn btn-group-sm btn-success" type="button" id="btnBuscar" onclick="BuscarMedicina()">Buscar</button>
                 </div>
-            </div>
-            <div class="form-group col-lg-12">
+            </div>       
+            <div class="form-group">
                 <div class="input-group">
+                    <span class="input-group-addon">Medicina</span>
                     <input class="form-control input-group-sm col-2" type="text" id="tbMedicina" placeholder="Medicina" />
                 </div>
             </div>
-            <div class="form-group col-lg-12">
+            <div class="form-group">
                 <div class="input-group">
+                    <span class="input-group-addon">Descripcion</span>
                     <input class="form-control input-group-sm col-2" type="text" id="tbDescripcion" placeholder="Descripcion" />
                 </div>
-            </div>
-            <div class="form-group col-lg-12">
+            </div>  
+            <div class="form-group">
                 <div class="input-group">
+                    <span class="input-group-addon">Precio de Venta</span>
                     <input class="form-control input-group-sm col-2" type="text" id="tbPrecioVenta" placeholder="Precio Venta" />
                 </div>
-            </div>
-            <div class="form-group col-lg-12">
+            </div>  
+            <div class="form-group">
                 <div class="input-group">
+                    <span class="input-group-addon">Precio de Compra</span>
                     <input class="form-control input-group-sm col-2" type="text" id="tbPrecioCompra" placeholder="Precio Compra" />
                 </div>
-            </div>
-            <div class="form-group col-lg-12">
+            </div>             
+            <div class="form-group">
                 <div class=" input-group">
-                    <input class="form-control input-group-sm col-2" type="date" name="dpFechaVencimiento" id="dpFechaVencimiento" placeholder="Fecha de vencimiento" />
+                    <span class="input-group-addon">Fecha Vencimiento</span>
+                    <input class="form-control input-group input" type="text" id="dpFechaVencimiento" placeholder="Fecha"/>
                 </div>
             </div>
-            <div class="form-group col-lg-12">
+            <div class="form-group">
                 <div class="input-group">
+                    <span class="input-group-addon">Cantidad de Existencia</span>
                     <input class="form-control input-group-sm col-2" type="text" id="tbCantidadExistencia" placeholder="Cantidad Existencia" />
                 </div>
-            </div>
-            <div class="form-group col-lg-12">
-                <div>
-                    <select class="form-control selected" id="ComboBoxL"> <option selected="selected" disabled="disabled">Laboratorios</option></select>
+            </div>              
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon">Laboratorios</span>
+                    <select class="form-control selected" id="LaboratoriosList">
+                        <option value="0" disabled selected> </option>
+                    </select>
                 </div>
             </div>
-            <div class="form-group col-lg-12">
+            <div class="form-group">
                 <div class="input-group">
+                    <span class="input-group-addon">Especificaciones</span>
                     <input class="form-control input-group-sm col-2" type="text" id="tbEspecificaciones" placeholder="Especificaciones" />
                 </div>
-            </div>
-            <div class="form-group col-lg-12">
-                <div>
-                    <select class="form-control selected" id="ComboBoxC"><option selected="selected" disabled="disabled">Categorias</option></select>
+            </div>            
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon">Categorias</span>
+                    <select class="form-control selected" id="CategoriasList">
+                        <option value="0" disabled selected> </option>
+                    </select>
                 </div>
             </div>
             <div class="form-group text-center col-xl-12">
@@ -80,43 +93,54 @@
     <a asp-action="Index">Back to List</a>
 </div>
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");
-
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");        
+        <script src="~/js/bootstrap-datepicker.min.js"></script>
+        <script type="text/javascript" src="~/js/bootstrap-datepicker.min.js"></script>
         <script type="text/javascript">
+
             $(document).ready(function () {
-                CargarL();
-                CargarC();
-            })
-    
+                NextId();
+                $.datepicker.setDefaults($.datepicker.regional["es"]);
+                $("#dpFechaVencimiento").datepicker({
+                    dateFormat: 'dd/mm/yy',
+                    firstDay: 0,
+                    monthNames: ['Enero', 'Febrero', 'Marzo',
+                        'Abril', 'Mayo', 'Junio',
+                        'Julio', 'Agosto', 'Septiembre',
+                        'Octubre', 'Nomviembre', 'Diciembre'],
+                    dayNamesMin: ['Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab', 'Dom'],
+                }).datepicker("setDate", "+m");                
+            });  
+            CargaDropDownList();           
+
             function ConstruirMedicina(opc) {
                 var medicinaId = $('#tbMedicinaId').val();
                 var medicamento = $('#tbMedicina').val();
                 var descripcion = $('#tbDescripcion').val();
                 var precioVenta = $('#tbPrecioVenta').val();
                 var precioCompra = $('#tbPrecioCompra').val();
-                var fechaV = $('#dtFechaVencimiento').val();
+                var fechaVencimiento = $('#dtFechaVencimiento').val();
                 var cantidad = $('#tbCantidadExistencia').val();
-                var a = $('#ComboBoxL').find('option:selected');
-                var b = a.attr('id');
+                var LaboratoriosListId = $('#LaboratoriosList').find('option:selected').attr('id');
+                var LaboratoriosList = $('#LaboratoriosList').find('option:selected');
                 var especificacion = $('#tbEspecificaciones').val();
-                var c = $('#ComboBoxC').find('option:selected');
-                var d = c.attr('id');
+                var CategoriasListId = $('#CategoriasList').find('option:selected').attr('id');
+                var CategoriasList = $('#CategoriasList').find('option:selected');
 
                 var medicina = {
-                    MedicinaId: 0,
+                    MedicinaId: medicinaId,
                     Nombre: medicamento,
                     Descripcion: descripcion,
                     PrecioVenta: precioVenta,
                     PrecioCompra: precioCompra,
-                    FechaVencimiento: fechaV,
+                    FechaVencimiento: fechaVencimiento,
                     CantidadExistencia: cantidad,
-                    LaboratorioId: b,
+                    LaboratorioId: LaboratoriosListId,
+                    Laboratorio: LaboratoriosList.text(),
                     Especificaciones: especificacion,
-                    CategoriaId: d
-                }
-                //console.log(medicina);
-                //EnviarMedicina(medicina);
-                //window.location.reload(false);
+                    CategoriaId: CategoriasListId,
+                    Categoria: CategoriasList.text()
+                }                
                 if (opc == 1) {
                     CrearMedicina(medicina);
                 } else if (opc == 2) {
@@ -124,22 +148,7 @@
                 } else if (opc == 3) {
                     EliminarMedicina(medicina);
                 }
-            }  
-
-            //function EnviarMedicina(producto) {
-            //    $.ajax({
-            //        method: "POST",
-            //        url: "/Medicinas/Guardar",
-            //        data: producto,
-            //        success: function (id) {
-            //            if (parseInt(id) > 0) {
-            //            }
-            //            else {
-            //                alert("");
-            //            }
-            //        }
-            //    });
-            //};
+            }             
 
             function CrearMedicina(medicina) {
                 $.ajax({
@@ -198,23 +207,20 @@
             function BuscarMedicina() {
                 var id = $('#tbMedicinaId').val();                
                 $.getJSON("/Medicinas/Buscar", { MedicinaId: id }, function (med) {
-                    $('#tbMedicina').val(med.medicamento);                    
-                    $('#tbMedicina').attr('value', id);                
+                    $('#tbMedicina').val(med.nombre);                                   
                     $('#tbDescripcion').val(med.descripcion);
                     $('#tbPrecioVenta').val(med.precioVenta);
                     $('#tbPrecioCompra').val(med.precioCompra);
-                    $('#dtFechaVencimiento').val(med.fechaV);
-                    $('#tbCantidadExistencia').val(med.cantidad);
-                    $('#ComboBoxL').find('opc').remove();
-                    $('#ComboBoxC').find('opc').remove();
-                    var opL = "<opc id='" + med.laboratorioId + "'value'" + 1 + "'>" + med.b + "</opc>";
-                    $('#ComboBoxL').append(opL);
-                    $('#tbEspecificaciones').val(med.especificacion);
-                    var opC = "<opc id='" + med.categoriaId + "'value'" + 1 + "'>" + med.d + "</opc>";
-                    $('#ComboBoxC').append(opC);
-                });
-                //Cargar();
-                //CargarC();
+                    $('#dtFechaVencimiento').val(med.fechaVencimiento);
+                    $('#tbCantidadExistencia').val(med.cantidadExistencia);
+                    $('#LaboratoriosList').find('opc').remove();
+                    $('#CategoriasList').find('opc').remove();
+                    var opL = "<opc id='" + med.laboratorioId + "'value'" + 1 + "'>" + med.nombre + "</opc>";
+                    $('#LaboratoriosList').append(opL);
+                    $('#tbEspecificaciones').val(med.especificaciones);
+                    var opC = "<opc id='" + med.categoriaId + "'value'" + 1 + "'>" + med.descripcion + "</opc>";
+                    $('#CategoriasList').append(opC);
+                });                
             }           
 
             function LimpiarCampos() {
@@ -223,14 +229,15 @@
                 $('#tbDescripcion').val("");
                 $('#tbPrecioVenta').val("");
                 $('#tbPrecioCompra').val("");
-                //$("#dtFechaVencimiento").datepicker("setDate", "+m");                
+                $("#dtFechaVencimiento").datepicker("setDate", "+m");                
                 $('#tbCantidadExistencia').val("");
                 $('#ComboBoxL').val("");
                 $('#tbEspecificaciones').val("");
                 $('#ComboBoxC').val("");
             }
 
-            function CargarL() {
+            //Cargar DropDownList
+            function CargaDropDownList() {
                 $.getJSON("/Laboratorios/Lista",
                     {
                         id: 1
@@ -238,28 +245,34 @@
                     function (lista) {
                         $.each(lista, function (index, lista) {
                             var Id = lista.laboratorioId;
-                            var eso = 1;
-                            var Nombre = lista.nombre;
-                            var option = "<option id='" + Id + "'value='" + eso + "'>" + Nombre + "</option>";
-                            $('#ComboBoxL').append(option);
+                            var Nombre = lista.nombre;                            
+                            var option = "<option id='" + Id + "'value='" + 0 + "'>" + Nombre + "</option>";
+                            $('#LaboratoriosList').append(option);
                         });
                     });
-            }
-            function CargarC() {
                 $.getJSON("/Categorias/Lista",
                     {
                         id: 1
                     },
                     function (lista) {
                         $.each(lista, function (index, lista) {
-                            var Id = lista.categoriaId
+                            var Id = lista.categoriaId;
                             var Nombre = lista.descripcion;
-                            var a = 1
-                            var option = "<option id='" + Id + "'value='" + a + "'>" + Nombre + "</option>";
-                            $('#ComboBoxC').append(option);
+                            var option = "<option id='" + Id + "'value='" + 0 + "'>" + Nombre + "</option>";
+                            $('#CategoriasList').append(option);
                         });
+
                     });
+            }            
+
+            //Siguiente Id
+            function NextId() {
+                $.getJSON("/Medicinas/LastIndex", function (id) {
+                    $('#tbMedicinaId').val(id);
+                });
             }
+
+            
         </script>
     }
 }

@@ -34,9 +34,16 @@ namespace ProyectoBeta.Controllers
         }
 
         [HttpGet]
-        public JsonResult Buscar(int VentaId)
+        public JsonResult Buscar(int ventaId)
         {
-            Ventas venta = VentasBLL.BuscarEncabezado(VentaId);
+            Ventas venta = VentasBLL.Buscar(ventaId);
+            return Json(venta);
+        }
+
+        [HttpGet]
+        public JsonResult BuscarVentas(int ventaId)
+        {
+            var venta = VentasBLL.Listar();
             return Json(venta);
         }
 

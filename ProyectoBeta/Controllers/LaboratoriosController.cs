@@ -28,13 +28,15 @@ namespace ProyectoBeta.Controllers
             return Json(listado);
         }
 
-        //[HttpGet]
-        //public JsonResult Buscar(int? labId)
-        //{
-        //    var lab = LaboratoriosBLL.Buscar(labId);
-        //    return Json(lab);
-        //}
-
+        [HttpGet]
+        public JsonResult LastIndex()
+        {
+            int id = LaboratoriosBLL.Identity();
+            if (id > 1 || LaboratoriosBLL.GetLista().Count > 0)
+                ++id;
+            return Json(id);
+        }
+        
         [HttpGet]
         public JsonResult Buscar(int id)
         {
@@ -95,7 +97,7 @@ namespace ProyectoBeta.Controllers
             bool resultado = false;
             if (ModelState.IsValid)
             {
-                if (MedicinasBLL.Buscar(lab.LaboratorioId) != null)
+                if (LaboratoriosBLL.Buscar(lab.LaboratorioId) != null)
                     resultado = LaboratoriosBLL.Eliminar(lab);
             }
             return Json(resultado);

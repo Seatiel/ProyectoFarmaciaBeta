@@ -35,6 +35,14 @@ namespace ProyectoBeta.Controllers
             return View(await medicinas.ToListAsync());
         }
 
+        [HttpGet]
+        public JsonResult LastIndex()
+        {
+            int id = MedicinasBLL.Identity();
+            if (id > 1 || MedicinasBLL.GetLista().Count > 0)
+                ++id;
+            return Json(id);
+        }
         //[HttpPost]
         //public string Index(string searchString, bool notUsed)
         //{
@@ -83,28 +91,43 @@ namespace ProyectoBeta.Controllers
         }
 
         [HttpPost]
-        public JsonResult Modificar(Medicinas med)
+        public JsonResult Modificar(Laboratorios lab)
         {
-            bool resultado = false;
-            if (ModelState.IsValid)
+            var existe = (LaboratoriosBLL.Buscar(lab.LaboratorioId) != null);
+            if (existe)
             {
-                if (MedicinasBLL.Buscar(med.MedicinaId) != null)
-                    resultado = MedicinasBLL.Modificar(med);
+                existe = LaboratoriosBLL.Modificar(lab);
+                return Json(existe);
             }
-            return Json(resultado);
+            else
+            {
+                return Json(null);
+            }
         }
 
-        [HttpPost]
-        public JsonResult Eliminar(Medicinas med)
-        {
-            bool resultado = false;
-            if (ModelState.IsValid)
-            {
-                if (MedicinasBLL.Buscar(med.MedicinaId) != null)
-                    resultado = MedicinasBLL.Eliminar(med);
-            }
-            return Json(resultado);
-        }
+        //[HttpPost]
+        //public JsonResult Modificar(Medicinas med)
+        //{
+        //    bool resultado = false;
+        //    if (ModelState.IsValid)
+        //    {
+        //        if (MedicinasBLL.Buscar(med.MedicinaId) != null)
+        //            resultado = MedicinasBLL.Modificar(med);
+        //    }
+        //    return Json(resultado);
+        //}
+
+        //[HttpPost]
+        //public JsonResult Eliminar(Medicinas med)
+        //{
+        //    bool resultado = false;
+        //    if (ModelState.IsValid)
+        //    {
+        //        if (MedicinasBLL.Buscar(med.MedicinaId) != null)
+        //            resultado = MedicinasBLL.Eliminar(med);
+        //    }
+        //    return Json(resultado);
+        //}
 
         [HttpGet]
         public JsonResult Lista(int id)

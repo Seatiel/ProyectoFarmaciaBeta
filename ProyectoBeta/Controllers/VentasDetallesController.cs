@@ -18,12 +18,19 @@ namespace ProyectoBeta.Controllers
             _context = context;    
         }
 
+        [HttpGet]
+        public JsonResult BuscarVentaD(int ventaId)
+        {
+            var venta = VentasDetallesBLL.Listar(ventaId);
+            return Json(venta);
+        }
+
         // GET: VentasDetalles
         public IActionResult Index()
         {
-            return View(VentasDetallesBLL.Listar());
+            return View(_context.VentasDetalle.ToListAsync());
         }
-
+        
         // GET: VentasDetalles/Details/5
         public async Task<IActionResult> Details(int? id)
         {

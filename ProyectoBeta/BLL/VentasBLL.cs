@@ -32,7 +32,7 @@ namespace ProyectoBeta.Models
             return resultado;
         }
 
-        public static ClaseMaestra Buscar(int? ventaid)
+        public static ClaseMaestra BuscarEncabezado(int? ventaid)
         {
             ClaseMaestra venta = null;
             using (var db = new Context())
@@ -128,7 +128,7 @@ namespace ProyectoBeta.Models
         {
             try
             {
-                return Eliminar(Buscar(ventaId));
+                return Eliminar(BuscarEncabezado(ventaId));
             }
             catch (Exception)
             {
@@ -158,7 +158,7 @@ namespace ProyectoBeta.Models
             return false;
         }
 
-        public static Ventas BuscarEncabezado(int? ventaId)
+        public static Ventas Buscar(int ventaId)
         {
             Ventas venta = null;
             using (var db = new Context())

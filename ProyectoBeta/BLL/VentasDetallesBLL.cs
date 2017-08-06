@@ -109,23 +109,23 @@ namespace ProyectoBeta.Models
             return false;
         }
 
-        public static List<VentasDetalle> Listar()
-        {
-            List<VentasDetalle> listado = null;
-            using (var db = new Context())
-            {
-                try
-                {
-                    listado = db.VentasDetalle.ToList();
-                }
-                catch (Exception)
-                {
+        //public static List<VentasDetalle> Listar(int? ventaId)
+        //{
+        //    List<VentasDetalle> listado = null;
+        //    using (var db = new Context())
+        //    {
+        //        try
+        //        {
+        //            listado = db.VentasDetalle.Where(d => d.VentaId == ventaId).ToList();
+        //        }
+        //        catch (Exception)
+        //        {
 
-                    throw;
-                }
-            }
-            return listado;
-        }
+        //            throw;
+        //        }
+        //    }
+        //    return listado;
+        //}
 
         public static List<VentasDetalle> Listar(int? ventaId)
         {

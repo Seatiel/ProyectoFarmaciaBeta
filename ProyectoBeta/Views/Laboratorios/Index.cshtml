@@ -8,41 +8,115 @@
 
 <p>
     <a asp-action="Create">Create New</a>
+    <div class="form-group">
+        <div class="input-group">
+            <span class="input-group-addon">Filtrar</span>
+            <select class="form-control selected" id="tbFiltro">
+                <option value="0" disabled selected> </option>
+                <option value="1" selected>Id</option>
+                <option value="2" selected>Todo</option>
+            </select>
+            <span class="input-group-addon">VentaId:</span>
+            <input class="form-control input-group-lg col-2" type="text" id="tbId" placeholder="Id" />
+            <button type="button" class="btn btn-success col-sm-2" id="btnBuscar" onclick="Buscar()">Buscar</button>
+        </div>
+    </div>
 </p>
+<div id="HTMLtoPDF">
+    <table id="tabla" class="table table-bordered">
+        <thead>
+            <tr>
+                <th>LaboratorioId</th>
+                <th>Fecha</th>
+                <th>Nombre</th>                
+            </tr>
+        </thead>
+        <tbody id="tbBody"></tbody>
+    </table>
+</div>
+<a href="#" onclick="HTMLtoPDF()">Descargar reporte PDF</a>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        <script src="~/js/jquery-3.1.1.min.js"></script>
+        <script src="~/js/jspdf.js"></script>
+        <script type="text/javascript">
+            var cont;
 
-<form asp-controller="Laboratorios" asp-action="Index" method="get">
-    <p>
-        Title: <input type="text" name="SearchString">
-        <input type="submit" value="Filter" />
-    </p>
-</form>
-<table class="table">
-    <thead>
-        <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Nombre)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FechaIngreso)
-                </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FechaIngreso)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.LaboratorioId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.LaboratorioId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.LaboratorioId">Delete</a>
-            </td>
-        </tr>
+            function HTMLtoPDF() {
+                if (cont >= 1) {
+                    var pdf = new jsPDF('p', 'pt', 'letter');
+                    source = $('#HTMLtoPDF')[0];
+                    specialElementHandlers = {
+                        '#bypassme': function (element, renderer) {
+                            return true
+                        }
+                    }
+                    margins = {
+                        top: 1,
+                        left: 100,
+                        width: 100
+                    };
+                    pdf.fromHTML(
+                        source
+                        , margins.left
+                        , margins.top
+                        , {
+                            'width': margins.width
+                            , 'elementHandlers': specialElementHandlers
+                        },
+                        function (dispose) {
+                            pdf.save('ReportesLaboratorios.pdf');
+                        }
+                    )
+                }
+                else { alert("No se puede realizar el reporte"); }
+            }
+
+
+            $('#tbFiltro').val($('#ServicioList > option:first').val());
+            $("#tbId").attr('disabled', 'disabled');
+            $("#tbFiltro").change(function () {
+                if ($("#tbFiltro").val() == 1) {
+                    $("#tbId").removeAttr("disabled");
+                }
+                else {
+                    $('#tbId').val("");
+                    $("#tbId").attr('disabled', 'disabled');
+                }
+            });
+            function Buscar() {
+                $('#tbBody tr').remove();
+                cont = 0;
+                var filtro = $('#tbFiltro').find('option:selected').attr('value');
+                var Id = $('#tbId').val();
+                if (filtro == 1) {
+                    $.getJSON("/Laboratorios/Buscar",
+                        { VentaId: Id }, function (lista) {
+                            var fila = "<tr>"
+                                + "<td>" + lista.laboratorioId + "</td>"                                
+                                + "<td>" + lista.nombre + "</td>"
+                                + "<td>" + lista.fechaIngreso + "</td>"
+                                + "</tr>";
+                            $('#tabla tbody').append(fila);
+                            cont++;
+                        });
+                } else {
+                    $.getJSON("/Laboratorios/Lista",
+                        { VentaId: 0 }, function (lista) {
+                            $.each(lista, function (index, lista) {
+                                var fila = "<tr>"
+                                    + "<td>" + lista.laboratorioId + "</td>"
+                                    + "<td>" + lista.nombre + "</td>"
+                                    + "<td>" + lista.fechaIngreso + "</td>"  
+                                    + "</tr>";
+                                $('#tabla tbody').append(fila);
+                                cont++;
+                            });
+                        });
+                }
+
+
+            }
+        </script>
+    }
 }
-    </tbody>
-</table>
