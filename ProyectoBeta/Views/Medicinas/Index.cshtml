@@ -93,31 +93,27 @@
                 var Id = $('#tbId').val();
                 if (filtro == 1) {
                     $.getJSON("/Medicinas/Buscar",
-                        { VentaId: Id }, function (lista) {
+                        { MedicinaId : Id }, function (lista) {
                             var fila = "<tr>"
                                 + "<td>" + lista.medicinaId + "</td>"
                                 + "<td>" + lista.nombre + "</td>"                                
-                                + "<td>" + lista.precioVenta + "</td>"
-                               // + "<td>" + lista.precioCompra + "</td>"
+                                + "<td>" + lista.precioVenta + "</td>"                               
                                 + "<td>" + lista.fechaVencimiento + "</td>"
-                                + "<td>" + lista.cantidadExistencia + "</td>"
-                               // + "<td>" + lista.laboratorioId + "</td>"                                                            
+                                + "<td>" + lista.cantidadExistencia + "</td>"                                                                                       
                                 + "</tr>";
                             $('#tabla tbody').append(fila);
                             cont++;
                         });
                 } else {
                     $.getJSON("/Medicinas/Lista",
-                        { VentaId: 0 }, function (lista) {
+                        { MedicinaId : 0 }, function (lista) {
                             $.each(lista, function (index, lista) {
                                 var fila = "<tr>"
                                     + "<td>" + lista.medicinaId + "</td>"
                                     + "<td>" + lista.nombre + "</td>"                                 
-                                    + "<td>" + lista.precioVenta + "</td>"
-                                   // + "<td>" + lista.precioCompra + "</td>"
+                                    + "<td>" + lista.precioVenta + "</td>"                                   
                                     + "<td>" + lista.fechaVencimiento + "</td>"
-                                    + "<td>" + lista.cantidadExistencia + "</td>"
-                                   // + "<td>" + lista.laboratorioId + "</td>"                                 
+                                    + "<td>" + lista.cantidadExistencia + "</td>"                                                                   
                                     + "</tr>";
                                 $('#tabla tbody').append(fila);
                                 cont++;

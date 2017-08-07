@@ -120,7 +120,7 @@
                 var descripcion = $('#tbDescripcion').val();
                 var precioVenta = $('#tbPrecioVenta').val();
                 var precioCompra = $('#tbPrecioCompra').val();
-                var fechaVencimiento = $('#dtFechaVencimiento').val();
+                var fechaV = $('#dpFechaVencimiento').val();
                 var cantidad = $('#tbCantidadExistencia').val();
                 var LaboratoriosListId = $('#LaboratoriosList').find('option:selected').attr('id');
                 var LaboratoriosList = $('#LaboratoriosList').find('option:selected');
@@ -129,12 +129,12 @@
                 var CategoriasList = $('#CategoriasList').find('option:selected');
 
                 var medicina = {
-                    MedicinaId: medicinaId,
+                    MedicinaId: 0,
                     Nombre: medicamento,
                     Descripcion: descripcion,
                     PrecioVenta: precioVenta,
                     PrecioCompra: precioCompra,
-                    FechaVencimiento: fechaVencimiento,
+                    FechaVencimiento: fechaV,
                     CantidadExistencia: cantidad,
                     LaboratorioId: LaboratoriosListId,
                     Laboratorio: LaboratoriosList.text(),
