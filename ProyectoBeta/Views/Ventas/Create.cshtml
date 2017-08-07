@@ -170,6 +170,7 @@
                     Detalle: Detalle
                 }
                 Enviar(EncabezadoDetalle);
+
             }
             function Enviar(data) {
                 $.ajax(
@@ -180,10 +181,18 @@
                         success: function (id) {
                             if (parseInt(id) > 0) {
                                 VentId = id;
+
+                            }
+                        },
+                        success: function (resultado) {
+                            if (resultado) {
+                                alert("La Medicina fue registrado exitosamente.");
+                            }
+                            else {
+                                alert("No se pudo procesar su solicitud");
                             }
                         }
-                    });
-            };
+            });
 
             //Modificar
             function ModificarFactura(EncabezadoDetalle) {

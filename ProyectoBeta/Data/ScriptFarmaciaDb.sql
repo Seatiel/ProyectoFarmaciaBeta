@@ -62,5 +62,9 @@ Total money
 insert into TipoVentas(Descripcion) values ('Contado')
 insert into TipoVentas(Descripcion) values ('Credito')
 
-select * from Ventas
+insert into Categorias(Descripcion) values ('Calmantes')
 
+select * from Categorias
+
+
+TRUNCATE TABLE Medicinas
