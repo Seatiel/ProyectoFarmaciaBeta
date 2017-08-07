@@ -1,4 +1,113 @@
 @model IEnumerable<ProyectoBeta.Models.Laboratorios>
+@{
+    ViewData["Title"] = "Index";
+}
+<h2>Laboratorios</h2>
+@using (Html.BeginForm(null, null, FormMethod.Get))
+{
+
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+    <fieldset>
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="form-group">
+            <div class="input-group">
+                <span class="input-group-addon">Desde:</span>
+                <input class="form-control input-group input" type="text" placeholder="Desde" id="dpDesde" required readonly />
+                <span class="input-group-addon">Hasta:</span>
+                <input class="form-control input-group input" type="text" placeholder="Hasta" id="dpHasta" required readonly />
+                <button type="button" class="btn btn-success col-sm-2" id="btnCrear" onclick="Buscar()">Buscar</button>
+            </div>
+        </div>
+    </fieldset>
+}
+<div id="HTMLtoPDF">
+    <table class="table" id="tDetalle">
+        <thead>
+            <tr>
+                <th>LaboratorioId</th>
+                <th>Fecha</th>
+                <th>Nombre</th> 
+            </tr>
+        </thead>
+        <tbody id="tbBody"></tbody>
+    </table>
+</div>
+<a href="#" onclick="HTMLtoPDF()">Descargar reporte PDF</a>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        <script src="~/js/bootstrap-datepicker.min.js"></script>
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <script type="text/javascript" src="~/js/bootstrap-datepicker.min.js"></script>
+        <script src="~/js/jquery-3.1.1.min.js"></script>
+        <script src="~/js/jquery-ui.js"></script>
+        <script src="~/js/jspdf.js"></script>
+
+        <script type="text/javascript">
+            $(document).off('.datepicker.data-api'); $('#dpDesde').datepicker({ format: 'dd/mm/yyyy', autoclose: true });
+            $(document).off('.datepicker.data-api'); $('#dpHasta').datepicker({ format: 'dd/mm/yyyy', autoclose: true });
+
+
+
+            function HTMLtoPDF() {
+                if (cont >= 1) {
+                    var pdf = new jsPDF('p', 'pt', 'letter');
+                    source = $('#HTMLtoPDF')[0];
+                    specialElementHandlers = {
+                        '#bypassme': function (element, renderer) {
+                            return true
+                        }
+                    }
+                    margins = {
+                        top: 1,
+                        left: 100,
+                        width: 100
+                    };
+                    pdf.fromHTML(
+                        source
+                        , margins.left
+                        , margins.top
+                        , {
+                            'width': margins.width
+                            , 'elementHandlers': specialElementHandlers
+                        },
+                        function (dispose) {
+                            pdf.save('ReportesLaboratorios.pdf');
+                        }
+                    )
+                }
+                else { alert("No se puede realizar el reporte"); }
+            }
+
+            var cont;
+            function Buscar() {
+                cont = 0;
+                $('#tbBody tr').remove();
+                var Desde = $('#dpDesde').val();
+                var Hasta = $('#dpHasta').val();
+                $.getJSON("/Laboratorios/BuscarFecha",
+                    {
+                        Desde: Desde,
+                        Hasta: Hasta
+                    },
+                    function (lista) {
+                        $.each(lista, function (index, lista) {
+                            var fila = "<tr>"
+                                + "<td>" + lista.laboratorioId + "</td>"
+                                + "<td>" + lista.nombre + "</td>"
+                                + "<td>" + lista.fechaIngreso + "</td>"
+                                + "</tr>";
+                            $('#tDetalle tbody').append(fila);
+                            cont++;
+                        });
+                    });
+            }
+        </script>
+    }
+}
+
+@*@model IEnumerable<ProyectoBeta.Models.Laboratorios>
 
 @{
     ViewData["Title"] = "Index";
@@ -119,4 +228,4 @@
             }
         </script>
     }
-}
+}*@

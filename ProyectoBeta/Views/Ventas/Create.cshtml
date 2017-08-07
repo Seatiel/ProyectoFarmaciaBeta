@@ -355,17 +355,16 @@
             function Buscar() {
                 Detalle.length = 0;
                 var id = $('#tbVentaId').val();
-                var medicina;
+                var medicina = $('#MedicinaList');
                 $.getJSON("/Ventas/Buscar",
                     { VentaId : id }, function (vent) {
                         if (vent != null) {
                             $('#dpFecha').val(vent.fechaVenta);
                             $('#TipoVentaList').find('option').remove();
-                            $('#MedicinaList').find('option').remove();
-                            //medicina = vent.medicina;
-                            var opc = "<option id='" + vent.TipoVentasId + "'value='" + 1 + "'>" + vent.TipoVentas + "</option>"
+                            $('#MedicinaList').find('option').remove();                            
+                            var opc = "<option id='" + vent.TipoVentaListId + "'value='" + 1 + "'>" + vent.tipoVenta + "</option>"
                             $('#TipoVentaList').append(opc);
-                            var opc1 = "<option id='" + vent.MedicinaId + "'value='" + 1 + "'>" + vent.Medicina + "</option>"
+                            var opc1 = "<option id='" + vent.medicinaId + "'value='" + 1 + "'>" + vent.medicina + "</option>"
                             $('#MedicinaList').append(opc1);
 
                             $.getJSON("/VentasDetalles/BuscarVentaD", { VentaId : id }, function (custom) {

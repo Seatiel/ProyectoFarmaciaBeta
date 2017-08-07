@@ -36,7 +36,13 @@ namespace ProyectoBeta.Controllers
                 ++id;
             return Json(id);
         }
-        
+
+        [HttpGet]
+        public ActionResult BuscarFecha(DateTime Desde, DateTime Hasta)
+        {
+            return Json(LaboratoriosBLL.GetListaFecha(Desde, Hasta));
+        }
+
         [HttpGet]
         public JsonResult Buscar(int id)
         {

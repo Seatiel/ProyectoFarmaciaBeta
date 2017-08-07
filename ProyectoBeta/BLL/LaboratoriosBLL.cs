@@ -169,6 +169,24 @@ namespace ProyectoBeta.Models
         //    }               
         //}
 
+        public static List<Laboratorios> GetListaFecha(DateTime Desde, DateTime Hasta)
+        {
+            List<Laboratorios> lista = new List<Laboratorios>();
+            using (var db = new Context())
+            {
+                try
+                {
+                    lista = db.Laboratorios.Where(p => p.FechaIngreso >= Desde && p.FechaIngreso <= Hasta).ToList();
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+            }
+            return lista;
+        }
+
         public static int Identity()
         {
             int identity = 0;
